@@ -29,11 +29,11 @@ export default function PricingSection() {
   return (
     <motion.section
       id="pricing"
-      className="py-4"
+      className="py-4 relative overflow-hidden"
       variants={sectionVariants}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-100px" }}
+      viewport={{ once: true }}
     >
       <div className="container mx-auto px-4">
         {/* Header */}
@@ -44,7 +44,7 @@ export default function PricingSection() {
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
             Simple & Transparent Pricing
           </h2>
-          <p className="mt-4 text-muted-foreground">
+          <p className="mt-4">
             Purchase credits to unlock CAPTCHA-solving APIs. No subscriptions or
             recurring fees.
           </p>
@@ -73,18 +73,14 @@ export default function PricingSection() {
 
               <h3 className="text-xl font-semibold">{plan.title}</h3>
 
-              <p className="mt-2 text-sm text-muted-foreground">
-                {plan.description}
-              </p>
+              <p className="mt-2 text-sm">{plan.description}</p>
 
               <div className="mt-6 flex items-end gap-2">
                 <span className="text-3xl font-bold">{plan.price}</span>
-                <span className="text-sm text-muted-foreground">
-                  {plan.unit}
-                </span>
+                <span className="text-sm">{plan.unit}</span>
               </div>
 
-              <div className="mt-4 text-sm text-muted-foreground">
+              <div className="mt-4 text-sm">
                 ⚡ Average speed:{" "}
                 <span className="font-medium">{plan.speed}</span>
               </div>
@@ -106,7 +102,7 @@ export default function PricingSection() {
                 <Link
                   href={
                     plan.title === "Enterprise"
-                      ? "mailto:support@recaptchasolver.com"
+                      ? "mailto:support@captchasolver.com"
                       : "/signup"
                   }
                   className={`mt-4 inline-flex h-11 w-full items-center justify-center rounded-md px-5 text-sm font-semibold transition
@@ -127,12 +123,10 @@ export default function PricingSection() {
 
         {/* Footer CTA */}
         <motion.div className="mt-12 text-center" variants={cardVariants}>
-          <p className="text-sm text-muted-foreground">
-            Need higher volume or custom pricing?
-          </p>
+          <p className="text-sm">Need higher volume or custom pricing?</p>
 
           <Link
-            href="mailto:support@recaptchasolver.com"
+            href="mailto:support@captchasolver.com"
             className="mt-3 inline-flex items-center justify-center text-sm font-semibold text-primary underline"
           >
             Contact Sales

@@ -73,24 +73,22 @@ const CaptchaFlowSection: FC = () => {
         <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
           How Our CAPTCHA API Works
         </h2>
-        <p className="mt-4 text-muted-foreground">
+        <p className="mt-4">
           A seamless verification flow — secure, fast, and developer-friendly.
         </p>
       </div>
 
-      <div className="relative mx-auto max-w-6xl rounded-3xl border border-white/30 bg-primary/50 shadow-xl px-8 py-10">
+      <div className="relative mx-auto max-w-6xl rounded-3xl border border-white/30 bg-primary/50 shadow-xl p-10">
         <div className="relative flex flex-col md:flex-row items-center justify-center gap-16 md:gap-20">
           <Node icon={User} label="User Request" accent="text-blue-500" />
-          <ArrowRight className="hidden md:block w-8 h-8 text-muted-foreground" />
+          <ArrowRight className="hidden md:block w-8 h-8" />
 
           {/* API Engine */}
           <div className="relative w-72 h-72 flex items-center justify-center">
             {/* Core */}
             <div className="absolute z-10 w-28 h-28 rounded-full bg-white shadow-xl flex flex-col items-center justify-center">
               <Key className="w-10 h-10 text-yellow-500" />
-              <span className="mt-1 text-xs font-semibold">
-                CAPTCHA API
-              </span>
+              <span className="mt-1 text-xs font-semibold">CAPTCHA API</span>
             </div>
 
             {/* Orbiting items */}
@@ -110,7 +108,7 @@ const CaptchaFlowSection: FC = () => {
             ))}
           </div>
 
-          <ArrowRight className="hidden md:block w-8 h-8 text-muted-foreground" />
+          <ArrowRight className="hidden md:block w-8 h-8" />
           <Node icon={Check} label="CAPTCHA Solved" accent="text-green-500" />
         </div>
       </div>

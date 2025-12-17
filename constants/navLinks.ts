@@ -6,12 +6,12 @@ export const navLinks = [
   },
   {
     title: "Pricing",
-    href: "#pricing",
+    href: "/pricing",
     external: false,
   },
   {
     title: "Blog",
-    href: "#blog",
+    href: "/blog",
     external: false,
   },
   {

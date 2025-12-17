@@ -88,7 +88,7 @@ export default function UseCasesSection() {
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
             Built for Authorized Automation & Testing
           </h2>
-          <p className="mt-4 text-muted-foreground">
+          <p className="mt-4">
             Our CAPTCHA-solving APIs support accessibility, testing, and
             authorized automation workflows across multiple industries.
           </p>
@@ -114,9 +114,7 @@ export default function UseCasesSection() {
 
                 <h3 className="text-lg font-semibold">{item.title}</h3>
 
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {item.description}
-                </p>
+                <p className="mt-2 text-sm">{item.description}</p>
               </motion.div>
             );
           })}

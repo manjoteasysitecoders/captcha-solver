@@ -70,7 +70,7 @@ export default function HowItWorks() {
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
             How It Works
           </h2>
-          <p className="mt-4 text-muted-foreground">
+          <p className="mt-4">
             Solve text, image, and audio CAPTCHA challenges using simple,
             purpose-built APIs.
           </p>
@@ -109,9 +109,7 @@ export default function HowItWorks() {
 
                   <div>
                     <h4 className="font-semibold">{item.title}</h4>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      {item.description}
-                    </p>
+                    <p className="mt-1 text-sm">{item.description}</p>
                   </div>
                 </motion.div>
               ))}

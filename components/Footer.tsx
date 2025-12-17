@@ -9,11 +9,9 @@ export default function Footer() {
       <div className="container mx-auto px-4 grid gap-8 lg:gap-10 sm:grid-cols-2 lg:grid-cols-4">
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2 font-bold text-lg justify-center sm:justify-start">
-            <Link href="/">ReCAPTCHA Solver</Link>
+            <Link href="/">CAPTCHA Solver</Link>
           </div>
-          <p className="text-sm text-muted-foreground">
-            © 2025 ReCAPTCHA Solver. All Rights Reserved.
-          </p>
+          <p className="text-sm">© 2025 CAPTCHA Solver. All Rights Reserved.</p>
 
           {/* Payment methods */}
           <div className="mt-4 flex gap-3 flex-wrap"></div>
@@ -22,7 +20,7 @@ export default function Footer() {
         {/* Products */}
         <div>
           <h4 className="font-semibold mb-4">Products</h4>
-          <ul className="space-y-3 text-sm text-muted-foreground">
+          <ul className="space-y-3 text-sm">
             <li>
               <Link
                 href="/products/image-captcha"
@@ -53,7 +51,7 @@ export default function Footer() {
         {/* Legal */}
         <div>
           <h4 className="font-semibold mb-4">Legal</h4>
-          <ul className="space-y-3 text-sm text-muted-foreground">
+          <ul className="space-y-3 text-sm">
             <li>
               <Link
                 href="/terms"
@@ -70,6 +68,14 @@ export default function Footer() {
                 Privacy Policy
               </Link>
             </li>
+            <li>
+              <Link
+                href="/refund"
+                className="hover:text-primary transition-colors"
+              >
+                Refund Policy
+              </Link>
+            </li>
           </ul>
         </div>
 
@@ -79,7 +85,7 @@ export default function Footer() {
           <div className="flex items-center gap-4 justify-center sm:justify-start">
             {/* Email Icon */}
             <Link
-              href="mailto:support@recaptchasolver.com"
+              href="mailto:support@captchasolver.com"
               className="hover:text-primary transition-colors"
             >
               <svg

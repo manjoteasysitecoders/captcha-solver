@@ -44,11 +44,10 @@ export default function ImageCaptchaPage() {
   };
 
   return (
-    <div className="relative overflow-hidden bg-background">
-      {/* Background Gradient */}
+    <div className="relative overflow-hidden">
       <div className="absolute inset-0 -z-10 bg-gradient-to-br from-primary/10 via-transparent to-transparent" />
 
-      <main className="max-w-7xl mx-auto px-6 py-16 space-y-32">
+      <main className="max-w-7xl mx-auto px-6 py-16 space-y-20">
         {/* HERO */}
         <section className="text-center max-w-3xl mx-auto">
           <motion.div
@@ -62,7 +61,7 @@ export default function ImageCaptchaPage() {
             <h1 className="mt-6 text-5xl md:text-6xl font-extrabold tracking-tight">
               Image-to-Text CAPTCHA Solver
             </h1>
-            <p className="mt-6 text-lg text-muted-foreground">
+            <p className="mt-6 text-lg">
               Instantly extract text from image CAPTCHAs using advanced AI
               vision models. Trusted by 500+ developers for automation and
               verification workflows.
@@ -86,30 +85,19 @@ export default function ImageCaptchaPage() {
         </section>
 
         {/* WHAT IS CAPTCHA */}
-        <section className="grid lg:grid-cols-2 gap-24 items-center">
-          <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <ImageIcon className="w-14 h-14 text-primary" />
-              <h2 className="text-4xl font-bold">What is an Image CAPTCHA?</h2>
-            </div>
-            <p className="text-muted-foreground text-lg">
+        <section className="mt-10 items-center space-y-12">
+          <div className="space-y-2">
+            <h2 className="text-4xl font-bold">What is an Image CAPTCHA?</h2>
+            <p className="text-lg">
               Image CAPTCHAs embed distorted or stylized characters inside
               images to prevent automated access. They are intentionally noisy,
               warped, or low-resolution to block bots.
             </p>
-            <p className="text-muted-foreground">
+            <p>
               Solving them manually is slow and error-prone. Our AI-powered
               solver decodes text accurately, handling complex distortions and
               backgrounds effortlessly.
             </p>
-          </div>
-
-          <div className="rounded-2xl border bg-card p-6 shadow-xl">
-            <img
-              src="/images/image-captcha-example.png"
-              alt="Image CAPTCHA Example"
-              className="rounded-xl w-full"
-            />
           </div>
         </section>
 
@@ -137,18 +125,18 @@ export default function ImageCaptchaPage() {
           >
             <div className="flex flex-col items-center gap-4">
               <Upload className="w-12 h-12 text-primary" />
-              <h3 className="text-xl font-semibold text-white">
+              <h4 className="text-xl font-semibold text-background">
                 1. Submit Image URL
-              </h3>
+              </h4>
               <p className="text-center text-gray-300">
                 Provide the CAPTCHA image URL for processing.
               </p>
             </div>
             <div className="flex flex-col items-center gap-4">
               <Loader2 className="w-12 h-12 text-primary" />
-              <h3 className="text-xl font-semibold text-white">
+              <h4 className="text-xl font-semibold text-background">
                 2. AI Processing
-              </h3>
+              </h4>
               <p className="text-center text-gray-300">
                 Advanced AI detects characters, corrects distortions, and
                 extracts text accurately.
@@ -156,9 +144,9 @@ export default function ImageCaptchaPage() {
             </div>
             <div className="flex flex-col items-center gap-4">
               <Sparkles className="w-12 h-12 text-primary" />
-              <h3 className="text-xl font-semibold text-white">
+              <h4 className="text-xl font-semibold text-background">
                 3. Receive Text
-              </h3>
+              </h4>
               <p className="text-center text-gray-300">
                 Get the extracted text instantly, ready for automation,
                 verification, or scraping workflows.
@@ -177,7 +165,7 @@ export default function ImageCaptchaPage() {
             className="text-center max-w-3xl mx-auto"
           >
             <h2 className="text-4xl font-bold">Key Features</h2>
-            <p className="mt-4 text-muted-foreground">
+            <p className="mt-4">
               Designed for developers and enterprises seeking fast, reliable,
               and accurate Image CAPTCHA solutions.
             </p>
@@ -226,10 +214,8 @@ export default function ImageCaptchaPage() {
                 className="flex flex-col items-center gap-4 rounded-2xl border border-gray-200 bg-white p-6 shadow hover:shadow-lg transition"
               >
                 <feature.icon className="w-10 h-10 text-primary" />
-                <h3 className="text-xl font-semibold">{feature.title}</h3>
-                <p className="text-center text-muted-foreground">
-                  {feature.desc}
-                </p>
+                <h4 className="text-xl font-semibold">{feature.title}</h4>
+                <p className="text-center">{feature.desc}</p>
               </div>
             ))}
           </motion.div>
@@ -245,14 +231,12 @@ export default function ImageCaptchaPage() {
           >
             <h2 className="text-4xl font-bold text-center mb-10">Live Demo</h2>
 
-            <div className="grid lg:grid-cols-2 gap-8 rounded-3xl border border-gray-200 bg-white p-8 shadow-2xl hover:shadow-3xl transition-all">
+            <div className="max-w-3xl mx-auto rounded-3xl border border-primary bg-background/50 p-8 shadow-2xl hover:shadow-3xl transition-all">
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">
-                    Image URL
-                  </label>
+                  <label className="text-sm font-medium">Image URL</label>
                   <input
-                    className="w-full rounded-2xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition"
+                    className="mt-2 w-full rounded-2xl border border-primary/40 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition"
                     placeholder="https://example.com/captcha.png"
                     value={imageUrl}
                     onChange={(e) => setImageUrl(e.target.value)}
@@ -285,38 +269,30 @@ export default function ImageCaptchaPage() {
                   <p className="text-sm text-red-600 font-medium">{error}</p>
                 )}
               </div>
-              <div className="rounded-xl border p-4 flex items-center justify-center bg-gray-50">
-                <img
-                  src="/images/image-captcha-example.png"
-                  alt="Image CAPTCHA Example"
-                  className="rounded-xl w-full object-contain"
-                />
-              </div>
             </div>
           </motion.div>
         </section>
 
-        <section className="space-y-12">
-          {/* API Example */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="max-w-7xl mx-auto bg-gray-900 rounded-3xl p-10 shadow-xl space-y-6"
-          >
-            <h3 className="text-3xl font-bold text-white text-center mb-4">
-              API Example
-            </h3>
+        {/* API Example */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="max-w-7xl mx-auto bg-gray-900 rounded-3xl p-10 shadow-xl space-y-6"
+        >
+          <h4 className="text-3xl font-bold text-white text-center mb-4">
+            API Example
+          </h4>
 
-            <p className="text-gray-300 text-center">
-              Use this endpoint to extract text from any CAPTCHA image. Simply
-              send a POST request with the image URL and receive the extracted
-              text in response.
-            </p>
+          <p className="text-gray-300 text-center">
+            Use this endpoint to extract text from any CAPTCHA image. Simply
+            send a POST request with the image URL and receive the extracted
+            text in response.
+          </p>
 
-            <pre className="rounded-2xl bg-gray-800 p-6 text-sm text-green-400 overflow-x-auto">
-              {`POST /api/imageCaptcha
+          <pre className="rounded-2xl bg-gray-800 p-6 text-sm text-green-400 overflow-x-auto">
+            {`POST /api/imageCaptcha
 Content-Type: application/json
 
 {
@@ -327,52 +303,48 @@ Response:
 {
   "text": "Extracted CAPTCHA text"
 }`}
-            </pre>
+          </pre>
 
-            <div className="space-y-4 text-gray-300">
-              <h4 className="text-xl font-semibold text-white">
-                Step 1: Submit Image URL
-              </h4>
-              <p>
-                Send a POST request to{" "}
-                <code className="text-green-400">/api/image-captcha</code> with
-                a valid image URL. Ensure the URL points directly to the image
-                file (PNG, JPG, or GIF).
-              </p>
-
-              <h4 className="text-xl font-semibold text-white">
-                Step 2: Receive Result
-              </h4>
-              <p>
-                The API will respond with a JSON object containing the extracted
-                text. Handle the response as needed for your automation,
-                verification, or scraping workflow.
-              </p>
-
-              <h4 className="text-xl font-semibold text-white">
-                Step 3: Error Handling
-              </h4>
-              <p>
-                If the image URL is missing or invalid, the API returns a{" "}
-                <code className="text-red-400">400</code> error. For processing
-                failures, a <code className="text-red-400">500</code> error is
-                returned with a descriptive message.
-              </p>
-            </div>
-
-            <p className="text-center text-gray-400 mt-6">
-              Integrate this endpoint into your scripts or applications to
-              automate CAPTCHA solving seamlessly.
+          <div className="space-y-4 text-gray-300">
+            <h4 className="text-xl font-semibold text-white">
+              Step 1: Submit Image URL
+            </h4>
+            <p>
+              Send a POST request to{" "}
+              <code className="text-green-400">/api/imageCaptcha</code> with a
+              valid image URL. Ensure the URL points directly to the image file
+              (PNG, JPG, or GIF).
             </p>
-          </motion.div>
-        </section>
 
+            <h4 className="text-xl font-semibold text-white">
+              Step 2: Receive Result
+            </h4>
+            <p>
+              The API will respond with a JSON object containing the extracted
+              text. Handle the response as needed for your automation,
+              verification, or scraping workflow.
+            </p>
+
+            <h4 className="text-xl font-semibold text-white">
+              Step 3: Error Handling
+            </h4>
+            <p>
+              If the image URL is missing or invalid, the API returns a{" "}
+              <code className="text-red-400">400</code> error. For processing
+              failures, a <code className="text-red-400">500</code> error is
+              returned with a descriptive message.
+            </p>
+          </div>
+
+          <p className="text-center text-gray-400 mt-6">
+            Integrate this endpoint into your scripts or applications to
+            automate CAPTCHA solving seamlessly.
+          </p>
+        </motion.div>
         <PricingSection />
         <WhyBetterSection />
+        <CTASection />
       </main>
-
-      {/* CTA */}
-      <CTASection />
     </div>
   );
 }

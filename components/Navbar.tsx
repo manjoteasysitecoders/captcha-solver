@@ -15,7 +15,9 @@ export default function Navbar() {
         {...(link.external
           ? { target: "_blank", rel: "noopener noreferrer" }
           : {})}
-        className={`hover:text-foreground transition-colors ${isMobile ? "block" : ""}`}
+        className={`hover:text-foreground transition-colors ${
+          isMobile ? "block" : ""
+        }`}
         onClick={() => isMobile && setOpen(false)}
       >
         {link.title}
@@ -29,7 +31,7 @@ export default function Navbar() {
           href="/"
           className="text-lg font-semibold tracking-tight text-primary-foreground hover:text-foreground transition-colors"
         >
-          ReCAPTCHA Solver
+          CAPTCHA Solver
         </Link>
 
         {/* Desktop Navigation */}
@@ -39,7 +41,7 @@ export default function Navbar() {
 
         <div className="ml-6 hidden lg:flex items-center">
           <Link
-            href="#"
+            href="/signin"
             className="rounded-md px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-foreground/20 focus:outline-none focus:ring-2 focus:ring-ring"
           >
             Sign in
@@ -61,9 +63,17 @@ export default function Navbar() {
             viewBox="0 0 24 24"
           >
             {open ? (
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
             ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
             )}
           </svg>
         </button>
@@ -75,7 +85,7 @@ export default function Navbar() {
           <nav className="flex flex-col gap-4 px-4 py-6 text-sm font-medium text-primary-foreground">
             {renderLinks(true)}
             <Link
-              href="#"
+              href="/signin"
               onClick={() => setOpen(false)}
               className="mt-2 inline-flex items-center justify-center rounded-md bg-primary-foreground/10 px-4 py-2 font-semibold"
             >

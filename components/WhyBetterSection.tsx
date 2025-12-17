@@ -61,7 +61,7 @@ export default function WhyBetterSection() {
       whileInView="visible"
       viewport={{ once: true }}
     >
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 relative z-10">
         <motion.h2
           className="text-3xl md:text-5xl font-extrabold text-center mb-20 relative"
           variants={itemVariants}
@@ -85,7 +85,7 @@ export default function WhyBetterSection() {
                 {feature.icon}
               </div>
               <h3 className="text-xl font-semibold">{feature.title}</h3>
-              <ul className="flex flex-col gap-2 text-muted-foreground text-sm">
+              <ul className="flex flex-col gap-2 text-sm">
                 {feature.points.map((point, idx) => (
                   <li key={idx} className="flex items-start gap-3">
                     <span className="w-2 h-2 mt-2 rounded-full bg-primary inline-block" />

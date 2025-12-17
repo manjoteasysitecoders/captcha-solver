@@ -52,7 +52,8 @@ console.log(data.answer);`,
     icon: Mic,
     apiEndpoint: "/api/voiceCaptcha",
     example: `const formData = new FormData();
-formData.append("url", "https://example.com/audioCaptcha.mp3");
+formData.append("url", 
+"https://example.com/audioCaptcha.mp3");
 
 const response = await fetch("/api/voiceCaptcha", {
   method: "POST",

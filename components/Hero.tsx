@@ -58,16 +58,16 @@ export default function HeroSection() {
               className="text-[42px] leading-tight md:text-[48px] font-bold tracking-tight"
               variants={itemVariants}
             >
-              Effortless reCAPTCHA Solving for Automation
+              Effortless CAPTCHA Solving for Automation
             </motion.h1>
 
             <motion.p
-              className="mt-4 text-base md:text-lg text-muted-foreground"
+              className="mt-4 text-base md:text-lg"
               variants={itemVariants}
             >
               Unlock reliable, fast, and scalable captcha solving with our{" "}
               <span className="font-semibold text-primary">
-                AI-powered reCAPTCHA Solver APIs
+                AI-powered CAPTCHA Solver APIs
               </span>
             </motion.p>
 
@@ -124,7 +124,7 @@ export default function HeroSection() {
             <div className="relative">
               <Image
                 src="/banner-robot.png"
-                alt="reCAPTCHA Solver"
+                alt="CAPTCHA Solver"
                 width={560}
                 height={560}
                 priority
@@ -169,7 +169,7 @@ export default function HeroSection() {
 function FeatureItem({ title }: { title: string }) {
   return (
     <motion.div
-      className="flex items-center gap-3 rounded-md border border-primary/50 bg-card px-4 py-3"
+      className="flex items-center gap-3 rounded-md border border-primary/50 px-4 py-3"
       variants={itemVariants}
     >
       <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-primary text-sm font-bold">

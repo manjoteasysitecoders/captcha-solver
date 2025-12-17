@@ -38,10 +38,10 @@ export default function TextCaptchaPage() {
   };
 
   return (
-    <div className="relative overflow-hidden bg-background">
+    <div className="relative overflow-hidden">
       <div className="absolute inset-0 -z-10 bg-gradient-to-br from-primary/10 via-transparent to-transparent" />
 
-      <main className="max-w-7xl mx-auto px-6 py-16 space-y-32">
+      <main className="max-w-7xl mx-auto px-6 py-16 space-y-20">
         {/* HERO */}
         <section className="text-center max-w-3xl mx-auto">
           <motion.div
@@ -55,7 +55,7 @@ export default function TextCaptchaPage() {
             <h1 className="mt-6 text-5xl md:text-6xl font-extrabold tracking-tight">
               Text-to-Text CAPTCHA Solver
             </h1>
-            <p className="mt-6 text-lg text-muted-foreground">
+            <p className="mt-6 text-lg">
               Instantly extract answers from text CAPTCHAs using advanced AI
               models. Trusted by 500+ developers for quizzes, verification, and
               automation workflows.
@@ -79,26 +79,17 @@ export default function TextCaptchaPage() {
         </section>
 
         {/* WHAT IS CAPTCHA */}
-        <section className="grid lg:grid-cols-2 gap-24 items-center">
-          <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <ImageIcon className="w-14 h-14 text-primary" />
-              <h2 className="text-4xl font-bold">What is a Text CAPTCHA?</h2>
-            </div>
-            <p className="text-muted-foreground text-lg">
+        <section className="items-center">
+          <div className="space-y-2">
+            <h2 className="text-4xl font-bold">What is a Text CAPTCHA?</h2>
+            <p className="text-lg">
               Text CAPTCHAs present questions, scrambled words, or puzzles to
               prevent automated bots from accessing content.
             </p>
-            <p className="text-muted-foreground">
+            <p>
               Solving them manually can be slow and error-prone. Our AI-powered
               solver extracts answers instantly and accurately, even for complex
               or obfuscated text.
-            </p>
-          </div>
-
-          <div className="rounded-2xl border bg-card p-6 shadow-xl flex items-center justify-center">
-            <p className="text-gray-500 text-center">
-              Example: "What is 12 + 7?" → The AI returns "19".
             </p>
           </div>
         </section>
@@ -127,18 +118,18 @@ export default function TextCaptchaPage() {
           >
             <div className="flex flex-col items-center gap-4">
               <Upload className="w-12 h-12 text-primary" />
-              <h3 className="text-xl font-semibold text-white">
+              <h4 className="text-xl font-semibold text-white">
                 1. Submit Text
-              </h3>
+              </h4>
               <p className="text-center text-gray-300">
                 Provide the text CAPTCHA or question for processing.
               </p>
             </div>
             <div className="flex flex-col items-center gap-4">
               <Loader2 className="w-12 h-12 text-primary" />
-              <h3 className="text-xl font-semibold text-white">
+              <h4 className="text-xl font-semibold text-white">
                 2. AI Processing
-              </h3>
+              </h4>
               <p className="text-center text-gray-300">
                 Advanced AI interprets the text and computes or extracts the
                 correct answer.
@@ -146,9 +137,9 @@ export default function TextCaptchaPage() {
             </div>
             <div className="flex flex-col items-center gap-4">
               <Sparkles className="w-12 h-12 text-primary" />
-              <h3 className="text-xl font-semibold text-white">
+              <h4 className="text-xl font-semibold text-white">
                 3. Receive Answer
-              </h3>
+              </h4>
               <p className="text-center text-gray-300">
                 Get the extracted answer instantly, ready for automation,
                 verification, or quizzes.
@@ -167,7 +158,7 @@ export default function TextCaptchaPage() {
             className="text-center max-w-3xl mx-auto"
           >
             <h2 className="text-4xl font-bold">Key Features</h2>
-            <p className="mt-4 text-muted-foreground">
+            <p className="mt-4">
               Designed for developers and enterprises seeking fast, reliable,
               and accurate text CAPTCHA solutions.
             </p>
@@ -216,10 +207,8 @@ export default function TextCaptchaPage() {
                 className="flex flex-col items-center gap-4 rounded-2xl border border-gray-200 bg-white p-6 shadow hover:shadow-lg transition"
               >
                 <feature.icon className="w-10 h-10 text-primary" />
-                <h3 className="text-xl font-semibold">{feature.title}</h3>
-                <p className="text-center text-muted-foreground">
-                  {feature.desc}
-                </p>
+                <h4 className="text-xl font-semibold">{feature.title}</h4>
+                <p className="text-center">{feature.desc}</p>
               </div>
             ))}
           </motion.div>
@@ -235,7 +224,7 @@ export default function TextCaptchaPage() {
           >
             <h2 className="text-4xl font-bold text-center mb-10">Live Demo</h2>
 
-            <div className="grid lg:grid-cols-2 gap-8 rounded-3xl border border-gray-200 bg-white p-8 shadow-2xl hover:shadow-3xl transition-all">
+            <div className="max-w-3xl mx-auto rounded-3xl border border-primary bg-background/50 p-8 shadow-2xl hover:shadow-3xl transition-all">
               <div className="space-y-6">
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-gray-700">
@@ -274,36 +263,28 @@ export default function TextCaptchaPage() {
                   <p className="text-sm text-red-600 font-medium">{error}</p>
                 )}
               </div>
-
-              <div className="rounded-xl border p-4 flex items-center justify-center bg-gray-50">
-                <p className="text-gray-400 text-center">
-                  Your CAPTCHA text will be processed here and the final answer
-                  will appear instantly.
-                </p>
-              </div>
             </div>
           </motion.div>
         </section>
 
         {/* API Example */}
-        <section className="space-y-12">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="max-w-7xl mx-auto bg-gray-900 rounded-3xl p-10 shadow-xl space-y-6"
-          >
-            <h3 className="text-3xl font-bold text-white text-center mb-4">
-              API Example
-            </h3>
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="max-w-7xl mx-auto bg-gray-900 rounded-3xl p-10 shadow-xl space-y-6"
+        >
+          <h4 className="text-3xl font-bold text-white text-center mb-4">
+            API Example
+          </h4>
 
-            <p className="text-gray-300 text-center">
-              Send a POST request to extract the final answer from text CAPTCHA.
-            </p>
+          <p className="text-gray-300 text-center">
+            Send a POST request to extract the final answer from text CAPTCHA.
+          </p>
 
-            <pre className="rounded-2xl bg-gray-800 p-6 text-sm text-green-400 overflow-x-auto">
-              {`POST /api/textCaptcha
+          <pre className="rounded-2xl bg-gray-800 p-6 text-sm text-green-400 overflow-x-auto">
+            {`POST /api/textCaptcha
 Content-Type: application/json
 
 {
@@ -314,44 +295,42 @@ Response:
 {
   "answer": "Extracted final answer"
 }`}
-            </pre>
+          </pre>
 
-            <div className="space-y-4 text-gray-300">
-              <h4 className="text-xl font-semibold text-white">
-                Step 1: Submit Text
-              </h4>
-              <p>
-                Send a POST request to{" "}
-                <code className="text-green-400">/api/textCaptcha</code> with
-                the text to solve.
-              </p>
+          <div className="space-y-4 text-gray-300">
+            <h4 className="text-xl font-semibold text-white">
+              Step 1: Submit Text
+            </h4>
+            <p>
+              Send a POST request to{" "}
+              <code className="text-green-400">/api/textCaptcha</code> with the
+              text to solve.
+            </p>
 
-              <h4 className="text-xl font-semibold text-white">
-                Step 2: Receive Result
-              </h4>
-              <p>
-                The API responds with a JSON object containing the extracted
-                answer.
-              </p>
+            <h4 className="text-xl font-semibold text-white">
+              Step 2: Receive Result
+            </h4>
+            <p>
+              The API responds with a JSON object containing the extracted
+              answer.
+            </p>
 
-              <h4 className="text-xl font-semibold text-white">
-                Step 3: Error Handling
-              </h4>
-              <p>
-                Missing or invalid text returns a{" "}
-                <code className="text-red-400">400</code> error. Processing
-                failures return a <code className="text-red-400">500</code>{" "}
-                error with a descriptive message.
-              </p>
-            </div>
-          </motion.div>
-        </section>
+            <h4 className="text-xl font-semibold text-white">
+              Step 3: Error Handling
+            </h4>
+            <p>
+              Missing or invalid text returns a{" "}
+              <code className="text-red-400">400</code> error. Processing
+              failures return a <code className="text-red-400">500</code> error
+              with a descriptive message.
+            </p>
+          </div>
+        </motion.div>
 
         <PricingSection />
         <WhyBetterSection />
+        <CTASection />
       </main>
-
-      <CTASection />
     </div>
   );
 }
