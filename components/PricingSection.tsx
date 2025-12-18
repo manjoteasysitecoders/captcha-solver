@@ -126,7 +126,7 @@ export default function PricingSection() {
           <p className="text-sm">Need higher volume or custom pricing?</p>
 
           <Link
-            href="mailto:support@captchasolver.com"
+            href="#"
             className="mt-3 inline-flex items-center justify-center text-sm font-semibold text-primary underline"
           >
             Contact Sales

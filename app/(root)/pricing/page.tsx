@@ -24,10 +24,10 @@ export default function PricingPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <h1 className="text-4xl md:text-5xl font-bold text-foreground">
+        <h1 className="text-4xl md:text-5xl font-bold">
           Pricing Plans
         </h1>
-        <p className="mt-4 text-muted-foreground text-lg">
+        <p className="mt-4 text-lg">
           Simple, transparent, and pay-as-you-go pricing for CAPTCHA Solver.
           No subscriptions or recurring fees.
         </p>
@@ -56,19 +56,19 @@ export default function PricingPage() {
               </span>
             )}
 
-            <h3 className="text-xl font-semibold text-foreground">{plan.title}</h3>
-            <p className="mt-2 text-sm text-muted-foreground">{plan.description}</p>
+            <h3 className="text-xl font-semibold">{plan.title}</h3>
+            <p className="mt-2 text-sm">{plan.description}</p>
 
             <div className="mt-6 flex items-end gap-2">
-              <span className="text-3xl font-bold text-foreground">{plan.price}</span>
-              <span className="text-sm text-muted-foreground">{plan.unit}</span>
+              <span className="text-3xl font-bold">{plan.price}</span>
+              <span className="text-sm">{plan.unit}</span>
             </div>
 
-            <div className="mt-4 text-sm text-muted-foreground">
+            <div className="mt-4 text-sm">
               ⚡ Average speed: <span className="font-medium">{plan.speed}</span>
             </div>
 
-            <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
+            <ul className="mt-4 space-y-2 text-sm">
               {plan.features.map((feature) => (
                 <li key={feature} className="flex items-center gap-2">
                   <span className="text-primary">✓</span>
@@ -83,7 +83,7 @@ export default function PricingPage() {
               whileTap={{ scale: 0.97 }}
             >
               <Link
-                href={plan.title === "Enterprise" ? "mailto:support@captchasolver.com" : "/signup"}
+                href={plan.title === "Enterprise" ? "#" : "/signup"}
                 className={`mt-4 inline-flex h-11 w-full items-center justify-center rounded-md px-5 text-sm font-semibold transition
                   ${
                     plan.highlight
@@ -105,7 +105,7 @@ export default function PricingPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <p className="text-sm text-muted-foreground">Need higher volume or custom pricing?</p>
+        <p className="text-sm">Need higher volume or custom pricing?</p>
         <Link
           href="mailto:support@captchasolver.com"
           className="mt-3 inline-flex items-center justify-center text-sm font-semibold text-primary underline"

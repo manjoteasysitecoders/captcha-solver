@@ -1,7 +1,9 @@
 "use client";
 
+import React, { useState } from "react";
 import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -91,50 +93,7 @@ export default function SignInPage() {
               </p>
             </div>
 
-            <form className="mt-8 space-y-5">
-              <input
-                type="email"
-                placeholder="Email address"
-                className="
-                  h-12 w-full rounded-xl
-                  border border-primary/50 bg-background
-                  px-4 text-base
-                  focus:outline-none focus:ring-2 focus:ring-primary
-                "
-              />
-
-              <input
-                type="password"
-                placeholder="Password"
-                className="
-                  h-12 w-full rounded-xl
-                  border border-primary/50 bg-background
-                  px-4 text-base
-                  focus:outline-none focus:ring-2 focus:ring-primary
-                "
-              />
-
-              {/* <div className="flex items-center justify-center text-sm">
-                <Link
-                  href="/forgot-password"
-                  className="text-primary hover:underline"
-                >
-                  Forgot password?
-                </Link>
-              </div> */}
-
-              <button
-                type="submit"
-                className="
-                  mt-2 h-12 w-full
-                  rounded-xl bg-primary
-                  font-semibold text-primary-foreground
-                  transition hover:bg-primary/90
-                "
-              >
-                Sign In
-              </button>
-            </form>
+            <SigninForm />
 
             <p className="mt-8 text-center text-sm">
               Don't have an account?{" "}
@@ -149,5 +108,81 @@ export default function SignInPage() {
         </div>
       </div>
     </motion.section>
+  );
+}
+
+function SigninForm() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch("/api/auth/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Sign in failed");
+      router.push("/pricing");
+    } catch (err: any) {
+      setError(err.message || "Sign in failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Email address"
+        className="
+          h-12 w-full rounded-xl
+          border border-primary/50 bg-background
+          px-4 text-base
+          focus:outline-none focus:ring-2 focus:ring-primary
+        "
+        required
+      />
+
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
+        className="
+          h-12 w-full rounded-xl
+          border border-primary/50 bg-background
+          px-4 text-base
+          focus:outline-none focus:ring-2 focus:ring-primary
+        "
+        required
+      />
+
+      <button
+        type="submit"
+        disabled={loading}
+        className="
+          mt-2 h-12 w-full
+          rounded-xl bg-primary
+          font-semibold text-primary-foreground
+          transition hover:bg-primary/90 disabled:opacity-60
+        "
+      >
+        {loading ? "Signing in..." : "Sign In"}
+      </button>
+
+      {error && <p className="text-sm text-red-500">{error}</p>}
+    </form>
   );
 }
