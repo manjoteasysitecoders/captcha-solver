@@ -1,11 +1,9 @@
 "use client";
 
 import { motion, type Variants } from "framer-motion";
-import { Copy } from "lucide-react";
 import Link from "next/link";
-import { toast } from "react-toastify";
+import { signIn } from "next-auth/react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -114,7 +112,6 @@ export default function SignInPage() {
 }
 
 function SignupForm() {
-  const router = useRouter(); 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -135,7 +132,17 @@ function SignupForm() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Signup failed");
 
-      router.push("/products");
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (!result || result.error) {
+        throw new Error("Auto login failed");
+      }
+
+      window.location.href = "/pricing";
     } catch (err: any) {
       setError(err.message || "Signup failed");
     } finally {

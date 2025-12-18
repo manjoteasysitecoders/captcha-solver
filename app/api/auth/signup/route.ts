@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { hashPassword, signJwt } from "@/lib/auth";
+import { hashPassword } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {
@@ -38,18 +38,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    const token = signJwt({ userId: user.id });
-
     const res = NextResponse.json({ success: true }, { status: 200 });
-
-    res.cookies.set("token", token, {
-      httpOnly: true,
-      path: "/",
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-    });
-
     return res;
   } catch (err: any) {
     return NextResponse.json(

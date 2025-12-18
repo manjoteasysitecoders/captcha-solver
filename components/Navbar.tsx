@@ -5,34 +5,18 @@ import Link from "next/link";
 import { navLinks } from "@/constants/navLinks";
 import { Moon, Sun } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useSession, signOut } from "next-auth/react";
 
 export default function Navbar() {
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const { status } = useSession(); // 👈 NextAuth session
+  const loading = status === "loading";
+  const isAuthenticated = status === "authenticated";
 
   const [open, setOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
 
-  async function checkAuth() {
-    try {
-      const res = await fetch("/api/auth/me", {
-        credentials: "include",
-        cache: "no-store",
-      });
-      const data = await res.json();
-      setIsAuthenticated(data.authenticated);
-    } catch {
-      setIsAuthenticated(false);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
+  // Restore theme
   useEffect(() => {
     const savedMode = localStorage.getItem("theme");
     if (savedMode === "dark") {
@@ -70,12 +54,7 @@ export default function Navbar() {
     ));
 
   async function handleLogout() {
-    await fetch("/api/auth/logout", {
-      method: "POST",
-      credentials: "include",
-    });
-
-    await checkAuth();
+    await signOut({ redirect: false });
     router.push("/");
   }
 
@@ -103,58 +82,29 @@ export default function Navbar() {
               Sign in
             </Link>
           ) : (
-            <>
-              <button
-                onClick={handleLogout}
-                className="rounded-md px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-foreground/20"
-              >
-                Logout
-              </button>
-            </>
+            <button
+              onClick={handleLogout}
+              className="rounded-md px-4 py-2 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary-foreground/20"
+            >
+              Logout
+            </button>
           )}
 
-          {/* Dark/Light Mode Button */}
+          {/* Dark Mode Toggle */}
           <button
             onClick={toggleDarkMode}
-            className="rounded-md p-2 text-primary-foreground hover:bg-primary-foreground/20 focus:outline-none focus:ring-2 focus:ring-ring"
-            aria-label="Toggle dark mode"
+            className="rounded-md p-2 text-primary-foreground hover:bg-primary-foreground/20"
           >
-            {darkMode ? (
-              <Moon className="h-5 w-5" />
-            ) : (
-              <Sun className="h-5 w-5" />
-            )}
+            {darkMode ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
           </button>
         </div>
 
         {/* Mobile Menu Button */}
         <button
           onClick={() => setOpen(!open)}
-          aria-label="Toggle menu"
-          aria-expanded={open}
-          className="ml-auto lg:hidden inline-flex items-center justify-center rounded-md p-2 text-primary-foreground hover:bg-primary-foreground/20 focus:outline-none focus:ring-2 focus:ring-ring"
+          className="ml-auto lg:hidden p-2 text-primary-foreground hover:bg-primary-foreground/20"
         >
-          <svg
-            className="h-6 w-6"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            viewBox="0 0 24 24"
-          >
-            {open ? (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            ) : (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            )}
-          </svg>
+          ☰
         </button>
       </div>
 
@@ -163,32 +113,30 @@ export default function Navbar() {
         <div className="lg:hidden border-t border-border bg-primary">
           <nav className="flex flex-col gap-4 px-4 py-6 text-sm font-medium text-primary-foreground">
             {renderLinks(true)}
+
             {!loading && !isAuthenticated ? (
               <Link
                 href="/signin"
                 onClick={() => setOpen(false)}
-                className="mt-2 inline-flex items-center justify-center rounded-md bg-primary-foreground/10 px-4 py-2 font-semibold"
+                className="mt-2 rounded-md bg-primary-foreground/10 px-4 py-2 text-center"
               >
                 Sign in
               </Link>
             ) : (
-              <>
-                <button
-                  onClick={handleLogout}
-                  className="mt-2 inline-flex items-center justify-center rounded-md bg-primary-foreground/10 px-4 py-2 font-semibold"
-                >
-                  Logout
-                </button>
-              </>
+              <button
+                onClick={handleLogout}
+                className="mt-2 rounded-md bg-primary-foreground/10 px-4 py-2"
+              >
+                Logout
+              </button>
             )}
 
-            {/* Mobile Dark Mode Toggle */}
             <button
               onClick={() => {
                 toggleDarkMode();
                 setOpen(false);
               }}
-              className="mt-2 inline-flex items-center justify-center rounded-md bg-primary-foreground/10 px-4 py-2 font-semibold"
+              className="mt-2 rounded-md bg-primary-foreground/10 px-4 py-2"
             >
               {darkMode ? "Light Mode" : "Dark Mode"}
             </button>

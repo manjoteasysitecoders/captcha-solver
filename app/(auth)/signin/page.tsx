@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -124,16 +125,18 @@ function SigninForm() {
     setError(null);
 
     try {
-      const res = await fetch("/api/auth/signin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Sign in failed");
+
+      if (!result || result.error) {
+        setError("Invalid email or password");
+        return;
+      }
+
       router.push("/pricing");
-    } catch (err: any) {
-      setError(err.message || "Sign in failed");
     } finally {
       setLoading(false);
     }

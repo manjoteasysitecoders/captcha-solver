@@ -3,8 +3,8 @@ export const pricingPlans = [
     title: "Starter",
     description:
       "For individual developers who are testing CAPTCHA-solving APIs.",
-    price: "$5",
-    unit: "one-time credit",
+    price: "₹300",
+    credits: "3000",
     speed: "Standard",
     highlight: false,
     features: [
@@ -18,8 +18,8 @@ export const pricingPlans = [
     title: "Pro",
     description:
       "Best for production workloads and higher request volume.",
-    price: "$25",
-    unit: "one-time credit",
+    price: "₹1200",
+    credits: "14000",
     speed: "High",
     highlight: true,
     features: [
@@ -34,8 +34,8 @@ export const pricingPlans = [
     title: "Enterprise",
     description:
       "Custom solutions for large-scale or specialized use cases.",
-    price: "Custom",
-    unit: "pricing",
+    price: "₹2500",
+    credits: "28000",
     speed: "Maximum",
     highlight: false,
     features: [
