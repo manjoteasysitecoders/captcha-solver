@@ -144,7 +144,7 @@ function SignupForm() {
         throw new Error("Auto login failed");
       }
 
-      window.location.href = "/pricing";
+      window.location.href = "/dashboard";
     } catch (err: any) {
       setError(err.message || "Signup failed");
     } finally {

@@ -138,7 +138,7 @@ function SigninForm() {
         return;
       }
 
-      router.push("/pricing");
+      router.push("/dashboard");
     } finally {
       setLoading(false);
     }

@@ -8,6 +8,20 @@ export const authOptions: AuthOptions = {
   session: {
     strategy: "jwt",
   },
+  callbacks: {
+    async session({ session, token }) {
+      if (token?.sub) {
+        session.user = { ...(session.user ?? {}), id: token.sub } as any;
+      }
+      return session;
+    },
+    async jwt({ token, user }) {
+      if (user && (user as any).id) {
+        token.sub = (user as any).id;
+      }
+      return token;
+    },
+  },
   providers: [
     Credentials({
       name: "Credentials",

@@ -1,0 +1,78 @@
+"use client";
+
+import { LogOut } from "lucide-react";
+import Link from "next/link";
+import { signOut } from "next-auth/react";
+import { usePathname } from "next/navigation";
+import { dashboardSidebarLinks } from "@/constants/navLinks";
+
+export default function Sidebar({ open }: { open: boolean }) {
+  const pathname = usePathname();
+
+  return (
+    <aside
+      className={`
+        fixed inset-y-0 left-0 z-40
+        bg-white dark:bg-card
+        shadow-2xl
+        transition-all duration-300
+        flex flex-col
+        ${open ? "w-70 px-6" : "w-20 px-3"}
+      `}
+    >
+      {/* Brand */}
+      <div className="h-20 flex items-center justify-center">
+        {open ? (
+          <h1 className="text-xl font-extrabold text-primary">
+            CAPTCHA SOLVER
+          </h1>
+        ) : (
+          <span className="text-primary font-bold">C</span>
+        )}
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 space-y-2">
+        {dashboardSidebarLinks.map((item) => {
+          const active = pathname === item.href;
+          const Icon = item.icon;
+
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              title={!open ? item.label : undefined}
+              className={`
+                group flex items-center gap-3 rounded-xl py-3
+                transition relative
+                ${open ? "px-4" : "justify-center"}
+                ${
+                  active
+                    ? "bg-primary text-primary-foreground shadow-lg"
+                    : "hover:bg-muted"
+                }
+              `}
+            >
+              <Icon size={20} />
+              {open && <span className="font-medium">{item.label}</span>}
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* Logout */}
+      <button
+        onClick={() => signOut({ callbackUrl: "/signin" })}
+        title={!open ? "Logout" : undefined}
+        className={`
+          flex items-center gap-3 rounded-xl py-3 text-red-600
+          hover:bg-red-50 transition
+          ${open ? "px-4" : "justify-center"}
+        `}
+      >
+        <LogOut size={20} />
+        {open && <span>Logout</span>}
+      </button>
+    </aside>
+  );
+}

@@ -13,7 +13,12 @@ model User {
   createdAt DateTime @default(now())
   password  String
   credits   Int      @default(0)
-  apiKey    String?
+  currentPlanId String?  
+  currentPlan   Plan?    @relation(fields: [currentPlanId], references: [id])
+
+  // Relations
+  apiKeys    ApiKey[]
+  requests   Request[]
 }
 
 model Plan {
@@ -22,4 +27,22 @@ model Plan {
   price       Int
   credits     Int
   description String?
+}
+
+model ApiKey {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  createdAt DateTime @default(now())
+  lastUsedAt DateTime?
+}
+
+model Request {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  status    String
+  credits   Int      @default(0)
+  createdAt DateTime @default(now())
 }

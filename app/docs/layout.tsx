@@ -21,8 +21,7 @@ export default async function DocsLayout({
   const pageMap = await getPageMap("/docs");
 
   return (
-    <html lang="en" dir="ltr" suppressHydrationWarning>
-      <body suppressHydrationWarning>
+      <div suppressHydrationWarning>
         <Layout
           sidebar={sidebar}
           navbar={navbar}
@@ -31,7 +30,6 @@ export default async function DocsLayout({
         >
           {children}
         </Layout>
-      </body>
-    </html>
+      </div>
   );
 }
