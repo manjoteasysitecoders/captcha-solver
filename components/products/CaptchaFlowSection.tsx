@@ -88,7 +88,7 @@ const CaptchaFlowSection: FC = () => {
             {/* Core */}
             <div className="absolute z-10 w-28 h-28 rounded-full bg-white shadow-xl flex flex-col items-center justify-center">
               <Key className="w-10 h-10 text-yellow-500" />
-              <span className="mt-1 text-xs font-semibold">CAPTCHA API</span>
+              <span className="mt-1 text-xs font-semibold text-black">CAPTCHA API</span>
             </div>
 
             {/* Orbiting items */}

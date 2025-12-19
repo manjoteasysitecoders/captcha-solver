@@ -13,12 +13,25 @@ const footer = (
   </Footer>
 );
 
-export default async function DocsLayout({ children }: { children: React.ReactNode }) {
+export default async function DocsLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const pageMap = await getPageMap("/docs");
 
   return (
-    <Layout sidebar={sidebar} navbar={navbar} pageMap={pageMap} footer={footer}>
-      {children}
-    </Layout>
+    <html lang="en" dir="ltr" suppressHydrationWarning>
+      <body suppressHydrationWarning>
+        <Layout
+          sidebar={sidebar}
+          navbar={navbar}
+          pageMap={pageMap}
+          footer={footer}
+        >
+          {children}
+        </Layout>
+      </body>
+    </html>
   );
 }

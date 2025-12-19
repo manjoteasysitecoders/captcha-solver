@@ -1,9 +1,10 @@
-import NextAuth from "next-auth";
+import NextAuth, { type AuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import prisma from "@/lib/prisma";
 import { verifyPassword } from "@/lib/auth";
 
-export const authOptions = {
+export const authOptions: AuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
   },
@@ -25,9 +26,12 @@ export const authOptions = {
 
         if (!user) return null;
 
-        const valid = await verifyPassword(credentials.password, user.password);
+        const isValid = await verifyPassword(
+          credentials.password,
+          user.password
+        );
 
-        if (!valid) return null;
+        if (!isValid) return null;
 
         return {
           id: user.id,
@@ -39,4 +43,5 @@ export const authOptions = {
 };
 
 const handler = NextAuth(authOptions);
+
 export { handler as GET, handler as POST };

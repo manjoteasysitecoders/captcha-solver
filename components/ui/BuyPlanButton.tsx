@@ -19,7 +19,7 @@ export default function BuyPlanButton({
   async function handleClick() {
     if (status === "authenticated") {
       if (onAuthenticatedClick) {
-        await onAuthenticatedClick(); // call your payment function
+        await onAuthenticatedClick(); // call payment function
       }
     } else {
       router.push("/signup");
