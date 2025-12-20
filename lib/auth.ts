@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import { type AuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import prisma from "@/lib/prisma";
+import { getServerSession } from "next-auth";
 
 export async function hashPassword(password: string) {
   const salt = await bcrypt.genSalt(10);
@@ -69,3 +70,9 @@ export const authOptions: AuthOptions = {
     },
   },
 };
+
+export async function getAuthUser() {
+  const session = await getServerSession(authOptions);
+  if (!session?.user) return null;
+  return session.user as { id: string; email: string };
+}

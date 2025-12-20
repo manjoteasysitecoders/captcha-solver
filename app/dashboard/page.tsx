@@ -1,78 +1,60 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import StatCard from "@/components/dashboard/StatCard";
-import { Zap, Activity, Package } from "lucide-react";
-
-interface UserData {
-  id: string;
-  email: string;
-  credits: number;
-  currentPlan?: {
-    id: string;
-    name: string;
-    price: number;
-    credits: number;
-    description: string;
-  } | null;
-}
+import { Zap, Package } from "lucide-react";
+import { useUser } from "@/context/UserContext";
 
 export default function DashboardPage() {
-  const [userData, setUserData] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { user } = useUser();
 
-  useEffect(() => {
-    async function fetchUser() {
-      try {
-        const res = await fetch("/api/user"); 
-        if (!res.ok) throw new Error("Failed to fetch user");
-        const data = await res.json();
-        setUserData(data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchUser();
-  }, []);
-
-  if (loading) return <p>Loading...</p>;
-  if (!userData) return <p>Failed to load user data</p>;
+  if (!user) return <p>Loading...</p>;
 
   return (
-    <div className="space-y-8">
-      <p className="text-2xl font-bold">Dashboard Overview</p>
+    <div className="space-y-10">
+      {/* Header */}
+      <div className="text-center lg:text-left">
+        <h1 className="text-3xl sm:text-4xl font-bold">Dashboard Overview</h1>
+        <p className="text-foreground/80 mt-2">
+          Monitor your usage and plan details.
+        </p>
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        <StatCard
-          title="Credits Remaining"
-          value={userData.credits.toString()}
-          icon={<Package size={40} />}
-        />
-        <StatCard
-          title="Requests Today"
-          value="87"
-          icon={<Activity size={40} />}
-        />
+      {/* Stat Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
         <StatCard
           title="Current Plan"
           value={
-            userData.currentPlan
-              ? `${userData.currentPlan.name} (₹${userData.currentPlan.price})`
+            user.currentPlan
+              ? `${user.currentPlan.name} (₹${user.currentPlan.price})`
               : "None"
           }
           icon={<Zap size={40} />}
         />
+        <StatCard
+          title="Credits Remaining"
+          value={user.credits.toLocaleString()}
+          icon={<Package size={40} />}
+        />
+        <StatCard
+          title="Total Requests"
+          value={user.totalRequests.toLocaleString()}
+          icon={<Zap size={40} />}
+        />
       </div>
 
-      <div className="rounded-3xl p-8 shadow-lg border border-primary/50 bg-primary/10">
-        <h2 className="text-xl font-bold mb-4">API Key</h2>
-        <code className="block p-4 rounded-xl font-mono border border-primary/20 bg-primary/10">
-          api_key
-        </code>
+      {user.credits === 0 && (
+        <div className="rounded-3xl p-8 shadow-lg border border-primary/50 bg-primary/10 text-center">
+        <h2 className="text-xl font-semibold mb-2">API Key</h2>
+        <p className="text-foreground/80">
+          Purchase a plan from{" "}
+          <span className="font-medium text-primary">Billing page</span> and
+          generate your API key from the{" "}
+          <span className="font-medium text-primary">API Keys page</span>.
+        </p>
       </div>
+      )
+
+      }
     </div>
   );
 }

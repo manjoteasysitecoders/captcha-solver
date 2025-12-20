@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Sidebar from "@/components/dashboard/Sidebar";
 import Topbar from "@/components/dashboard/Topbar";
+import { UserProvider } from "@/context/UserContext";
 
 export default function DashboardUI({
   children,
@@ -18,21 +19,23 @@ export default function DashboardUI({
   }, []);
 
   return (
-    <div className="flex h-screen bg-background">
-      <Sidebar open={sidebarOpen} />
+    <UserProvider>
+      <div className="flex h-screen bg-background">
+        <Sidebar open={sidebarOpen} />
 
-      <div
-        className={`
-          flex flex-col flex-1 transition-all duration-300
-          ${sidebarOpen ? "ml-72" : "ml-20"}
-        `}
-      >
-        <Topbar toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+        <div
+          className={`
+            flex flex-col flex-1 transition-all duration-300
+            ${sidebarOpen ? "ml-72" : "ml-20"}
+          `}
+        >
+          <Topbar toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
 
-        <main className="flex-1 px-12 pt-6 pb-10 space-y-10 overflow-auto">
-          {children}
-        </main>
+          <main className="flex-1 px-12 pt-6 pb-10 space-y-10 overflow-auto">
+            {children}
+          </main>
+        </div>
       </div>
-    </div>
+    </UserProvider>
   );
 }

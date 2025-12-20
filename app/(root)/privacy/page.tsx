@@ -105,7 +105,7 @@ export default function PrivacyPolicyPage() {
         <h1 className="text-4xl md:text-5xl font-bold text-foreground">
           Privacy <span className="text-primary">Policy</span>
         </h1>
-        <p className="mt-4 text-muted-foreground text-lg">
+        <p className="mt-4 text-lg">
           This Privacy Policy explains how CAPTCHA Solver collects, uses, stores, and protects your personal information when you use our services.
         </p>
       </header>
@@ -131,7 +131,7 @@ export default function PrivacyPolicyPage() {
               <h2 className="text-2xl font-semibold text-foreground mb-2">
                 {section.title}
               </h2>
-              <div className="text-muted-foreground leading-relaxed space-y-2">
+              <div className="leading-relaxed space-y-2">
                 {section.content}
               </div>
             </div>
@@ -144,7 +144,7 @@ export default function PrivacyPolicyPage() {
           className="bg-card border border-border rounded-2xl p-6"
         >
           <h2 className="text-2xl font-semibold text-foreground mb-2">Contact Us</h2>
-          <p className="text-muted-foreground">
+          <p>
             For questions or concerns regarding this Privacy Policy, please contact us at{" "}
             <a
               href="mailto:support@captchasolver.com"

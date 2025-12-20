@@ -142,7 +142,7 @@ export default function TermsAndConditionsPage() {
         <h1 className="text-4xl md:text-5xl font-bold text-foreground">
           Terms & <span className="text-primary">Conditions</span>
         </h1>
-        <p className="mt-4 text-muted-foreground text-lg">
+        <p className="mt-4 text-lg">
           These Terms & Conditions govern your access to and use of CAPTCHA Solver's website, APIs, and related services.
         </p>
       </header>
@@ -168,7 +168,7 @@ export default function TermsAndConditionsPage() {
               <h2 className="text-2xl font-semibold text-foreground mb-2">
                 {section.title}
               </h2>
-              <div className="text-muted-foreground leading-relaxed space-y-2">
+              <div className="leading-relaxed space-y-2">
                 {section.content}
               </div>
             </div>
@@ -183,7 +183,7 @@ export default function TermsAndConditionsPage() {
           <h2 className="text-2xl font-semibold text-foreground mb-2">
             Contact Information
           </h2>
-          <p className="text-muted-foreground">
+          <p>
             If you have questions about these Terms & Conditions, please contact us at{" "}
             <a
               href="mailto:support@captchasolver.com"

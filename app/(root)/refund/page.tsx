@@ -102,7 +102,7 @@ export default function RefundPolicyPage() {
         <h1 className="text-4xl md:text-5xl font-bold text-foreground">
           Refund <span className="text-primary">Policy</span>
         </h1>
-        <p className="mt-4 text-muted-foreground text-lg">
+        <p className="mt-4 text-lg">
           This Refund Policy explains how CAPTCHA Solver handles cancellations
           and refunds for our services.
         </p>
@@ -129,7 +129,7 @@ export default function RefundPolicyPage() {
               <h2 className="text-2xl font-semibold text-foreground mb-2">
                 {section.title}
               </h2>
-              <div className="text-muted-foreground leading-relaxed space-y-2">
+              <div className="leading-relaxed space-y-2">
                 {section.content}
               </div>
             </div>
@@ -144,7 +144,7 @@ export default function RefundPolicyPage() {
           <h2 className="text-2xl font-semibold text-foreground mb-2">
             Contact Us
           </h2>
-          <p className="text-muted-foreground">
+          <p>
             For questions regarding this Refund Policy, please contact our
             support team at{" "}
             <a

@@ -1,34 +1,30 @@
 "use client";
-
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { ButtonHTMLAttributes } from "react";
 
-type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
-  onAuthenticatedClick?: () => void; // optional
-};
+interface BuyPlanButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  onAuthenticatedClick?: () => void | Promise<void>;
+  onUnauthenticatedClick?: () => void;
+}
 
-export default function BuyPlanButton({
+const BuyPlanButton: React.FC<BuyPlanButtonProps> = ({
   onAuthenticatedClick,
-  children = "Get Started",
+  onUnauthenticatedClick,
+  children,
   ...props
-}: Props) {
-  const { status } = useSession();
-  const router = useRouter();
-
-  async function handleClick() {
-    if (status === "authenticated") {
-      if (onAuthenticatedClick) {
-        await onAuthenticatedClick(); // call payment function
-      }
-    } else {
-      router.push("/signup");
+}) => {
+  const handleClick = () => {
+    if (onAuthenticatedClick) {
+      onAuthenticatedClick();
+    } else if (onUnauthenticatedClick) {
+      onUnauthenticatedClick();
     }
-  }
+  };
 
   return (
-    <button onClick={handleClick} {...props}>
+    <button {...props} onClick={handleClick}>
       {children}
     </button>
   );
-}
+};
+
+export default BuyPlanButton;

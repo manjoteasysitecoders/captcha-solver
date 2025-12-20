@@ -20,7 +20,6 @@ export default function Sidebar({ open }: { open: boolean }) {
         ${open ? "w-70 px-6" : "w-20 px-3"}
       `}
     >
-      {/* Brand */}
       <div className="h-20 flex items-center justify-center">
         {open ? (
           <h1 className="text-xl font-extrabold text-primary">
@@ -48,8 +47,8 @@ export default function Sidebar({ open }: { open: boolean }) {
                 ${open ? "px-4" : "justify-center"}
                 ${
                   active
-                    ? "bg-primary text-primary-foreground shadow-lg"
-                    : "hover:bg-muted"
+                    ? "bg-primary text-background shadow-lg"
+                    : "hover:bg-primary hover:text-background"
                 }
               `}
             >

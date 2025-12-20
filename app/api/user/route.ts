@@ -16,6 +16,7 @@ export async function GET() {
       id: true,
       email: true,
       credits: true,
+      totalRequests: true,
       currentPlanId: true,
       currentPlan: {
         select: {
@@ -26,6 +27,7 @@ export async function GET() {
           description: true,
         },
       },
+      apiKeys: true,
     },
   });
 

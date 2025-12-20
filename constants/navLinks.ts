@@ -1,4 +1,4 @@
-import { BarChart3, CreditCard, KeyRound, LayoutDashboard } from "lucide-react";
+import { CreditCard, Dock, KeyRound, LayoutDashboard, RotateCcw } from "lucide-react";
 
 export const navLinks = [
   {
@@ -25,8 +25,8 @@ export const navLinks = [
 
 export const dashboardSidebarLinks = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
-  { href: "/dashboard/usage", label: "Usage", icon: BarChart3 },
-  { href: "/dashboard/api-key", label: "API Keys", icon: KeyRound },
   { href: "/dashboard/billing", label: "Billing", icon: CreditCard },
-  { href: "/docs", label: "View Documentation", icon: BarChart3 },
+  { href: "/dashboard/api-key", label: "Generate API Key", icon: KeyRound },
+  { href: "/docs", label: "View Documentation", icon: Dock },
+  { href: "/dashboard/playground", label: "Solve CAPTCHA", icon: RotateCcw }
 ];

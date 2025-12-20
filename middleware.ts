@@ -9,7 +9,8 @@ export async function middleware(req: NextRequest) {
   if (
     pathname.startsWith("/api") ||
     pathname.startsWith("/_next") ||
-    pathname.startsWith("/favicon.ico")
+    pathname.startsWith("/favicon.ico") || 
+    pathname.startsWith("/docs")
   ) {
     return NextResponse.next();
   }

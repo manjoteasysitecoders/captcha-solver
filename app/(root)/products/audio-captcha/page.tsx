@@ -96,11 +96,11 @@ export default function VoiceCaptchaPage() {
         <section className="items-center">
           <div className="space-y-2">
             <h2 className="text-4xl font-bold">What is a Audio CAPTCHA?</h2>
-            <p className="text-muted-foreground text-lg">
+            <p className="text-lg">
               Audio CAPTCHAs play audio prompts or spoken challenges to prevent
               automated bots from accessing content.
             </p>
-            <p className="text-muted-foreground">
+            <p>
               Solving them manually is slow and error-prone. Our AI-powered
               solver transcribes and extracts answers accurately, even from
               noisy or complex audio.

@@ -1,6 +1,7 @@
 export const pricingPlans = [
   {
-    title: "Starter",
+    id: "Starter",
+    name: "Starter",
     description:
       "For individual developers who are testing CAPTCHA-solving APIs.",
     price: "₹300",
@@ -15,7 +16,8 @@ export const pricingPlans = [
     ],
   },
   {
-    title: "Pro",
+    id: "Pro",
+    name: "Pro",
     description:
       "Best for production workloads and higher request volume.",
     price: "₹1200",
@@ -31,7 +33,8 @@ export const pricingPlans = [
     ],
   },
   {
-    title: "Enterprise",
+    id: "Enterprise",
+    name: "Enterprise",
     description:
       "Custom solutions for large-scale or specialized use cases.",
     price: "₹2500",
