@@ -155,7 +155,7 @@ export default function HowItWorks() {
           >
             <div className="flex items-center justify-between mb-3 text-xs">
               <span>Example: Solve Image CAPTCHA</span>
-              <span>POST /api/imageCaptcha</span>
+              <span>POST /api/public/imageCaptcha</span>
             </div>
 
             <p className="mb-3 text-xs">
@@ -163,7 +163,7 @@ export default function HowItWorks() {
             </p>
 
             <pre className="leading-relaxed">
-              {`const response = await fetch("/api/imageCaptcha", {
+              {`const response = await fetch("/api/public/imageCaptcha", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",

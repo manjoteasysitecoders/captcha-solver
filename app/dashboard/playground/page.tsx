@@ -87,27 +87,35 @@ export default function PlaygroundPage() {
         </p>
       </div>
 
-      <p className="text-primary font-medium my-4">
-        Choose CAPTCHA type.
-      </p>
+      <p className="text-primary font-medium my-4">Choose CAPTCHA type.</p>
 
       {/* CAPTCHA Type Selector */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Selector
           active={type === "image"}
-          onClick={() => setType("image")}
+          onClick={() => {
+            setType("image");
+            setValue("");
+          }}
           icon={<Image />}
           label="Image CAPTCHA"
         />
         <Selector
           active={type === "text"}
-          onClick={() => setType("text")}
+          onClick={() => {
+            setType("text");
+            setValue("");
+          }}
           icon={<Type />}
           label="Text CAPTCHA"
         />
         <Selector
           active={type === "voice"}
-          onClick={() => setType("voice")}
+          onClick={() => {
+            setType("voice");
+            setValue("");
+            setFile(null);
+          }}
           icon={<Mic />}
           label="Voice CAPTCHA"
         />

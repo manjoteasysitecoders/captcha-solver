@@ -16,9 +16,26 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (!rawKey) {
+      return NextResponse.json(
+        { error: "API key is required" },
+        { status: 401 }
+      );
+    }
+
     // Authenticate API Key
-    const { keyRecord, error } = await authenticateApiKey(rawKey!);
-    if (error) return error;
+    const result = await authenticateApiKey(rawKey);
+    if ("error" in result) return result.error;
+
+    const { keyRecord } = result;
+
+    // Check if user has enough credits
+    if (keyRecord.user.credits < 10) {
+      return NextResponse.json(
+        { error: "Insufficient credits" },
+        { status: 403 }
+      );
+    }
 
     // Deduct credits and increment totalRequests
     await prisma.user.update({

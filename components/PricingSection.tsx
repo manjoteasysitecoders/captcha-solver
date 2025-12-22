@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { PricingCard } from "./PricingCard";
 import { motion } from "framer-motion";
+import { Sparkles } from "lucide-react";
 
 const sectionVariants = {
   hidden: { opacity: 0 },
@@ -41,7 +42,10 @@ export default function PricingSection() {
           className="text-center max-w-2xl mx-auto"
           variants={cardVariants}
         >
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+          <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1 text-sm font-medium text-primary">
+            <Sparkles className="w-4 h-4" /> Start for free with 500 credits.
+          </span>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight mt-2">
             Simple & Transparent Pricing
           </h2>
           <p className="mt-4">
@@ -53,7 +57,7 @@ export default function PricingSection() {
         <PricingCard />
 
         {/* Footer CTA */}
-        <motion.div className="mt-12 text-center" variants={cardVariants}>
+        {/* <motion.div className="mt-12 text-center" variants={cardVariants}>
           <p className="text-sm">Need higher volume or custom pricing?</p>
 
           <Link
@@ -62,7 +66,7 @@ export default function PricingSection() {
           >
             Contact Sales
           </Link>
-        </motion.div>
+        </motion.div> */}
       </div>
     </motion.section>
   );

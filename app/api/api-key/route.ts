@@ -44,17 +44,17 @@ export async function POST() {
   });
 
   const plainKey = generateApiKey();
-  const key = hashApiKey(plainKey);
+  const hashedKey = await hashApiKey(plainKey);
 
   await prisma.apiKey.create({
     data: {
       userId: user.id,
-      key,
+      key: hashedKey,
     },
   });
 
   return NextResponse.json({
-    key: plainKey, // shown ONLY once
+    key: plainKey, // show ONLY once
     createdAt: new Date(),
   });
 }

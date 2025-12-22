@@ -10,11 +10,7 @@
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
 
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-
   --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
 
   --color-border: var(--border);
   --color-ring: var(--ring);
@@ -26,30 +22,14 @@
 
   --card: #e9f3ef;
   --card-foreground: #00201b;
-  --popover: #f1f1f1;
-  --popover-foreground: #00201b;
 
   --primary: #00a38f;
   --primary-foreground: #f1f1f1;
 
-  --accent: #ee9f3e;
-  --accent-foreground: #00201b;
-
   --muted: #e9f3ef;
-  --muted-foreground: #4b5563;
 
   --border: #e5e7eb;
-  --input: #e5e7eb;
   --ring: #00a38f;
-
-  --sidebar: #e9f3ef;
-  --sidebar-foreground: #00201b;
-  --sidebar-primary: #00a38f;
-  --sidebar-primary-foreground: #f1f1f1;
-  --sidebar-accent: #ee9f3e;
-  --sidebar-accent-foreground: #00201b;
-  --sidebar-border: #e5e7eb;
-  --sidebar-ring: #00a38f;
 }
 
 .dark {
