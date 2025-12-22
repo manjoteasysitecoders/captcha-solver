@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -14,42 +13,6 @@ import CTASection from "@/components/CTASection";
 import PricingSection from "@/components/PricingSection";
 
 export default function VoiceCaptchaPage() {
-  const [audioUrl, setAudioUrl] = useState("");
-  const [audioFile, setAudioFile] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  const solveCaptcha = async () => {
-    if (!audioUrl && !audioFile) return;
-    setLoading(true);
-    setResult(null);
-    setError(null);
-
-    try {
-      let formData = new FormData();
-      if (audioFile) {
-        formData.append("file", audioFile);
-      } else {
-        formData.append("url", audioUrl);
-      }
-
-      const res = await fetch("/api/voiceCaptcha", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to transcribe audio");
-
-      setResult(data.sentence);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="relative overflow-hidden">
       {/* Background Gradient */}
@@ -78,13 +41,13 @@ export default function VoiceCaptchaPage() {
 
           <div className="mt-10 flex justify-center gap-4 flex-wrap">
             <a
-              href="#demo"
+              href="/signup"
               className="inline-flex items-center gap-2 rounded-xl bg-primary px-8 py-4 text-background font-semibold shadow hover:bg-primary/90 transition"
             >
               Try Live Demo <ArrowRight className="w-4 h-4" />
             </a>
             <a
-              href="/docs"
+              href="/docs/api/audio-captcha"
               className="inline-flex items-center gap-2 rounded-xl border border-primary px-8 py-4 font-semibold text-primary hover:bg-primary hover:text-background transition"
             >
               View API Docs <ArrowRight className="w-4 h-4" />
@@ -118,7 +81,7 @@ export default function VoiceCaptchaPage() {
             className="text-center max-w-3xl mx-auto"
           >
             <h2 className="text-4xl font-bold text-background">How It Works</h2>
-            <p className="mt-4 text-gray-300">
+            <p className="mt-4 text-background">
               Simple three-step workflow to extract answers from audio CAPTCHAs:
             </p>
           </motion.div>
@@ -135,7 +98,7 @@ export default function VoiceCaptchaPage() {
               <h4 className="text-xl font-semibold text-background">
                 1. Upload or Provide URL
               </h4>
-              <p className="text-center text-gray-300">
+              <p className="text-center text-background">
                 Upload an audio file or provide a link to the audio CAPTCHA.
               </p>
             </div>
@@ -144,7 +107,7 @@ export default function VoiceCaptchaPage() {
               <h4 className="text-xl font-semibold text-background">
                 2. AI Transcription
               </h4>
-              <p className="text-center text-gray-300">
+              <p className="text-center text-background">
                 Advanced AI transcribes the audio and extracts the correct
                 answer.
               </p>
@@ -154,7 +117,7 @@ export default function VoiceCaptchaPage() {
               <h4 className="text-xl font-semibold text-background">
                 3. Receive Answer
               </h4>
-              <p className="text-center text-gray-300">
+              <p className="text-center text-background">
                 Get the transcribed answer instantly for automation,
                 verification, or quizzes.
               </p>
@@ -219,7 +182,7 @@ export default function VoiceCaptchaPage() {
             ].map((feature, i) => (
               <div
                 key={i}
-                className="flex flex-col items-center gap-4 rounded-2xl border border-gray-200 bg-white p-6 shadow hover:shadow-lg transition"
+                className="flex flex-col items-center gap-4 rounded-2xl border border-gray-200 bg-card p-6 shadow hover:shadow-lg transition"
               >
                 <feature.icon className="w-10 h-10 text-primary" />
                 <h4 className="text-xl font-semibold">{feature.title}</h4>
@@ -229,90 +192,26 @@ export default function VoiceCaptchaPage() {
           </motion.div>
         </section>
 
-        {/* DEMO */}
-        <section id="demo" className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-4xl font-bold text-center mb-10">Live Demo</h2>
-
-            <div className="max-w-3xl mx-auto rounded-3xl border border-primary bg-background/50 p-8 shadow-2xl hover:shadow-3xl transition-all">
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Audio URL</label>
-                  <input
-                    type="text"
-                    className="mt-2 w-full rounded-2xl border border-primary/40 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition"
-                    placeholder="https://example.com/captcha.mp3"
-                    value={audioUrl}
-                    onChange={(e) => setAudioUrl(e.target.value)}
-                  />
-                </div>
-
-                <div className="space-y-3">
-                  <label className="text-sm font-medium">Or Upload File</label>
-                  <input
-                    type="file"
-                    accept="audio/*"
-                    onChange={(e) => setAudioFile(e.target.files?.[0] ?? null)}
-                    className="w-full"
-                  />
-                </div>
-
-                <button
-                  onClick={solveCaptcha}
-                  disabled={loading}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-4 text-background font-semibold shadow-lg hover:bg-primary/90 transition-all transform hover:scale-105 disabled:opacity-50"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />{" "}
-                      Transcribing...
-                    </>
-                  ) : (
-                    <>
-                      Extract Text <Upload className="w-4 h-4" />
-                    </>
-                  )}
-                </button>
-
-                {result && (
-                  <pre className="rounded-2xl border border-gray-200 bg-gray-50 p-4 text-sm whitespace-pre-wrap shadow-inner">
-                    {result}
-                  </pre>
-                )}
-
-                {error && (
-                  <p className="text-sm text-red-600 font-medium">{error}</p>
-                )}
-              </div>
-            </div>
-          </motion.div>
-        </section>
-
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="max-w-7xl mx-auto bg-gray-900 rounded-3xl p-10 shadow-xl space-y-6"
+          className="max-w-7xl mx-auto bg-foreground rounded-3xl p-10 shadow-xl space-y-6"
         >
           <h4 className="text-3xl font-bold text-background text-center mb-4">
             Audio CAPTCHA API Example
           </h4>
 
-          <p className="text-gray-300 text-center max-w-3xl mx-auto">
+          <p className="text-background text-center max-w-3xl mx-auto">
             Transcribe and extract answers from audio CAPTCHAs by sending either
             an audio URL or uploading an audio file. The API returns a clean,
             human-readable sentence extracted from the audio.
           </p>
 
           {/* CODE BLOCK */}
-          <pre className="rounded-2xl bg-gray-800 p-6 text-sm text-green-400 overflow-x-auto">
-            {`POST /api/voiceCaptcha
+          <pre className="rounded-2xl bg-gray-700 p-6 text-sm text-green-400 overflow-x-auto">
+            {`POST /api/public/voiceCaptcha
 Content-Type: multipart/form-data
 
 Form Data:
@@ -320,7 +219,7 @@ Form Data:
 
 OR
 
-POST /api/voiceCaptcha
+POST /api/public/voiceCaptcha
 Content-Type: application/json
 
 {
@@ -334,14 +233,14 @@ Response:
           </pre>
 
           {/* STEPS */}
-          <div className="space-y-4 text-gray-300">
+          <div className="space-y-4 text-background">
             <h4 className="text-xl font-semibold text-background">
               Step 1: Submit Audio
             </h4>
             <p>
               Send a <code className="text-green-400">POST</code> request to{" "}
-              <code className="text-green-400">/api/voiceCaptcha</code> with
-              either:
+              <code className="text-green-400">/api/public/voiceCaptcha</code>{" "}
+              with either:
             </p>
             <ul className="list-disc list-inside space-y-2">
               <li>
@@ -384,7 +283,7 @@ Response:
             </p>
           </div>
 
-          <p className="text-center text-gray-400 mt-6">
+          <p className="text-center text-background/50 mt-6">
             Integrate this endpoint into your scripts, bots, or automation
             pipelines to solve audio CAPTCHAs at scale.
           </p>

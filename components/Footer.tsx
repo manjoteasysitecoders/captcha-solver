@@ -93,7 +93,7 @@ export default function Footer() {
                 height="24"
                 viewBox="0 0 24 24"
                 fill="currentColor"
-                className="text-muted-foreground hover:text-primary transition-colors"
+                className="hover:text-primary transition-colors"
               >
                 <path d="M12 12.713l11.985-7.713H0L12 12.713zm0 2.574L0 5.701V18c0 1.105.895 2 2 2h20c1.105 0 2-.895 2-2V5.701l-12 9.586z" />
               </svg>
@@ -101,7 +101,7 @@ export default function Footer() {
 
             {/* Telegram Icon */}
             <Link
-              href="https://t.me/+2S60dFyiS4VmNzc1"
+              href="https://web.telegram.org"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-primary transition-colors"
@@ -112,7 +112,7 @@ export default function Footer() {
                 height="24"
                 viewBox="0 0 24 24"
                 fill="currentColor"
-                className="text-muted-foreground hover:text-primary transition-colors"
+                className="hover:text-primary transition-colors"
               >
                 <path d="M12 0C5.371 0 0 5.372 0 12c0 6.628 5.371 12 12 12s12-5.372 12-12c0-6.628-5.371-12-12-12zm5.596 8.536l-1.403 6.606c-.106.5-.38.622-.77.386l-2.132-1.574-1.03.991c-.114.114-.21.21-.431.21l.154-2.172 3.946-3.56c.172-.154-.037-.24-.265-.086l-4.873 3.063-2.098-.655c-.455-.143-.465-.455.096-.671l8.19-3.15c.381-.143.715.086.594.655z" />
               </svg>

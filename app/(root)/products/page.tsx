@@ -39,7 +39,7 @@ export default function ProductsPage() {
               Talk to Sales <ArrowRight className="w-4 h-4" />
             </a>
             <a
-              href="#"
+              href="/signup"
               target="_blank"
               className="inline-flex items-center gap-2 rounded-lg border border-primary px-6 py-3 text-primary font-semibold hover:bg-primary hover:text-background transition"
             >

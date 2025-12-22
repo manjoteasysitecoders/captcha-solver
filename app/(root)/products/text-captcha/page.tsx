@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, Loader2, ImageIcon, Upload } from "lucide-react";
 import WhyBetterSection from "@/components/WhyBetterSection";
@@ -8,35 +7,6 @@ import CTASection from "@/components/CTASection";
 import PricingSection from "@/components/PricingSection";
 
 export default function TextCaptchaPage() {
-  const [inputText, setInputText] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  const solveCaptcha = async () => {
-    if (!inputText) return;
-    setLoading(true);
-    setResult(null);
-    setError(null);
-
-    try {
-      const res = await fetch("/api/textCaptcha", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: inputText }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to extract answer");
-
-      setResult(data.answer);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="relative overflow-hidden">
       <div className="absolute inset-0 -z-10 bg-gradient-to-br from-primary/10 via-transparent to-transparent" />
@@ -64,13 +34,13 @@ export default function TextCaptchaPage() {
 
           <div className="mt-10 flex justify-center gap-4 flex-wrap">
             <a
-              href="#demo"
+              href="/signup"
               className="inline-flex items-center gap-2 rounded-xl bg-primary px-8 py-4 text-background font-semibold shadow hover:bg-primary/90 transition"
             >
               Try Live Demo <ArrowRight className="w-4 h-4" />
             </a>
             <a
-              href="/docs"
+              href="/docs/api/text-captcha"
               className="inline-flex items-center gap-2 rounded-xl border border-primary px-8 py-4 font-semibold text-primary hover:bg-primary hover:text-background transition"
             >
               View API Docs <ArrowRight className="w-4 h-4" />
@@ -104,7 +74,7 @@ export default function TextCaptchaPage() {
             className="text-center max-w-3xl mx-auto"
           >
             <h2 className="text-4xl font-bold text-background">How It Works</h2>
-            <p className="mt-4 text-gray-300">
+            <p className="mt-4 text-background">
               Simple three-step workflow to extract answers from text CAPTCHAs:
             </p>
           </motion.div>
@@ -121,7 +91,7 @@ export default function TextCaptchaPage() {
               <h4 className="text-xl font-semibold text-background">
                 1. Submit Text
               </h4>
-              <p className="text-center text-gray-300">
+              <p className="text-center text-background">
                 Provide the text CAPTCHA or question for processing.
               </p>
             </div>
@@ -130,7 +100,7 @@ export default function TextCaptchaPage() {
               <h4 className="text-xl font-semibold text-background">
                 2. AI Processing
               </h4>
-              <p className="text-center text-gray-300">
+              <p className="text-center text-background">
                 Advanced AI interprets the text and computes or extracts the
                 correct answer.
               </p>
@@ -140,7 +110,7 @@ export default function TextCaptchaPage() {
               <h4 className="text-xl font-semibold text-background">
                 3. Receive Answer
               </h4>
-              <p className="text-center text-gray-300">
+              <p className="text-center text-background">
                 Get the extracted answer instantly, ready for automation,
                 verification, or quizzes.
               </p>
@@ -204,7 +174,7 @@ export default function TextCaptchaPage() {
             ].map((feature, i) => (
               <div
                 key={i}
-                className="flex flex-col items-center gap-4 rounded-2xl border border-gray-200 bg-white p-6 shadow hover:shadow-lg transition"
+                className="flex flex-col items-center gap-4 rounded-2xl border border-gray-200 bg-card p-6 shadow hover:shadow-lg transition"
               >
                 <feature.icon className="w-10 h-10 text-primary" />
                 <h4 className="text-xl font-semibold">{feature.title}</h4>
@@ -214,77 +184,24 @@ export default function TextCaptchaPage() {
           </motion.div>
         </section>
 
-        {/* DEMO */}
-        <section id="demo" className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-4xl font-bold text-center mb-10">Live Demo</h2>
-
-            <div className="max-w-3xl mx-auto rounded-3xl border border-primary bg-background/50 p-8 shadow-2xl hover:shadow-3xl transition-all">
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">
-                    Enter CAPTCHA Text
-                  </label>
-                  <textarea
-                    className="w-full rounded-2xl border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition"
-                    placeholder="Type or paste the CAPTCHA text here..."
-                    value={inputText}
-                    onChange={(e) => setInputText(e.target.value)}
-                    rows={4}
-                  />
-                </div>
-
-                <button
-                  onClick={solveCaptcha}
-                  disabled={loading}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-4 text-background font-semibold shadow-lg hover:bg-primary/90 transition-all transform hover:scale-105 disabled:opacity-50"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" /> Solving...
-                    </>
-                  ) : (
-                    <>Extract Answer</>
-                  )}
-                </button>
-
-                {result && (
-                  <pre className="rounded-2xl border border-gray-200 bg-gray-50 p-4 text-sm whitespace-pre-wrap shadow-inner">
-                    {result}
-                  </pre>
-                )}
-
-                {error && (
-                  <p className="text-sm text-red-600 font-medium">{error}</p>
-                )}
-              </div>
-            </div>
-          </motion.div>
-        </section>
-
         {/* API Example */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="max-w-7xl mx-auto bg-gray-900 rounded-3xl p-10 shadow-xl space-y-6"
+          className="max-w-7xl mx-auto bg-foreground rounded-3xl p-10 shadow-xl space-y-6"
         >
           <h4 className="text-3xl font-bold text-background text-center mb-4">
             API Example
           </h4>
 
-          <p className="text-gray-300 text-center">
+          <p className="text-background text-center">
             Send a POST request to extract the final answer from text CAPTCHA.
           </p>
 
-          <pre className="rounded-2xl bg-gray-800 p-6 text-sm text-green-400 overflow-x-auto">
-            {`POST /api/textCaptcha
+          <pre className="rounded-2xl bg-gray-700 p-6 text-sm text-green-400 overflow-x-auto">
+            {`POST /api/public/textCaptcha
 Content-Type: application/json
 
 {
@@ -297,14 +214,14 @@ Response:
 }`}
           </pre>
 
-          <div className="space-y-4 text-gray-300">
+          <div className="space-y-4 text-background">
             <h4 className="text-xl font-semibold text-background">
               Step 1: Submit Text
             </h4>
             <p>
               Send a POST request to{" "}
-              <code className="text-green-400">/api/textCaptcha</code> with the
-              text to solve.
+              <code className="text-green-400">/api/public/textCaptcha</code>{" "}
+              with the text to solve.
             </p>
 
             <h4 className="text-xl font-semibold text-background">

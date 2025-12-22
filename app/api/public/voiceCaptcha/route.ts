@@ -26,9 +26,26 @@ export async function POST(request: NextRequest) {
       audioUrl = body.url || null;
     }
 
+    if (!rawKey) {
+      return NextResponse.json(
+        { error: "API key is required" },
+        { status: 401 }
+      );
+    }
+
     // Authenticate API key
-    const { keyRecord, error } = await authenticateApiKey(rawKey!);
-    if (error) return error;
+    const authResult = await authenticateApiKey(rawKey);
+    if ("error" in authResult) return authResult.error;
+
+    const { keyRecord } = authResult;
+
+    // Check if user has enough credits
+    if (keyRecord.user.credits < 10) {
+      return NextResponse.json(
+        { error: "Insufficient credits" },
+        { status: 403 }
+      );
+    }
 
     if (!file && !audioUrl) {
       return NextResponse.json(
@@ -44,6 +61,12 @@ export async function POST(request: NextRequest) {
     await prisma.user.update({
       where: { id: keyRecord.userId },
       data: { credits: { decrement: 10 }, totalRequests: { increment: 1 } },
+    });
+
+    // Update lastUsedAt for the API key
+    await prisma.apiKey.update({
+      where: { id: keyRecord.id },
+      data: { lastUsedAt: new Date() },
     });
 
     return NextResponse.json({ sentence: result.sentence }, { status: 200 });

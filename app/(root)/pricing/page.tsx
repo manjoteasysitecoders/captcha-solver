@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { motion, Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import { PricingCard } from "@/components/PricingCard";
+import { Sparkles } from "lucide-react";
 
 export default function PricingPage() {
   return (
@@ -14,7 +15,10 @@ export default function PricingPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <h1 className="text-4xl md:text-5xl font-bold">Pricing Plans</h1>
+        <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1 text-sm font-medium text-primary">
+          <Sparkles className="w-4 h-4" /> Start for free with 500 credits.
+        </span>
+        <h1 className="text-4xl md:text-5xl font-bold mt-2">Pricing Plans</h1>
         <p className="mt-4 text-lg">
           Simple, transparent, and pay-as-you-go pricing for CAPTCHA Solver. No
           subscriptions or recurring fees.
@@ -24,7 +28,7 @@ export default function PricingPage() {
       <PricingCard />
 
       {/* Footer CTA */}
-      <motion.div
+      {/* <motion.div
         className="mt-16 text-center"
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
@@ -37,7 +41,7 @@ export default function PricingPage() {
         >
           Contact Sales
         </Link>
-      </motion.div>
+      </motion.div> */}
     </div>
   );
 }

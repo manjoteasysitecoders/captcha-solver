@@ -99,7 +99,7 @@ export default function ProductCard({
           hover:underline
         "
       >
-        View API <ArrowRight className="h-4 w-4" />
+        View more <ArrowRight className="h-4 w-4" />
       </a>
     </motion.div>
   );

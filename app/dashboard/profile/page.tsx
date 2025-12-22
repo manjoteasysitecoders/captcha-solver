@@ -27,7 +27,7 @@ export default function ProfilePage() {
         </p>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid gap-8">
         <Card>
           <div className="flex items-center gap-4">
             <div className="h-16 w-16 rounded-full bg-primary flex items-center justify-center text-white">

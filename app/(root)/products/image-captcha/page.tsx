@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -14,35 +13,6 @@ import CTASection from "@/components/CTASection";
 import PricingSection from "@/components/PricingSection";
 
 export default function ImageCaptchaPage() {
-  const [imageUrl, setImageUrl] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  const solveCaptcha = async () => {
-    if (!imageUrl) return;
-    setLoading(true);
-    setResult(null);
-    setError(null);
-
-    try {
-      const res = await fetch("/api/imageCaptcha", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imageUrl }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to extract text");
-
-      setResult(data.text);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="relative overflow-hidden">
       <div className="absolute inset-0 -z-10 bg-gradient-to-br from-primary/10 via-transparent to-transparent" />
@@ -70,13 +40,13 @@ export default function ImageCaptchaPage() {
 
           <div className="mt-10 flex justify-center gap-4 flex-wrap">
             <a
-              href="#demo"
+              href="/signup"
               className="inline-flex items-center gap-2 rounded-xl bg-primary px-8 py-4 text-background font-semibold shadow hover:bg-primary/90 transition"
             >
               Try Live Demo <ArrowRight className="w-4 h-4" />
             </a>
             <a
-              href="/docs"
+              href="/docs/api/image-captcha"
               className="inline-flex items-center gap-2 rounded-xl border border-primary px-8 py-4 font-semibold text-primary hover:bg-primary hover:text-background transition"
             >
               View API Docs <ArrowRight className="w-4 h-4" />
@@ -111,7 +81,7 @@ export default function ImageCaptchaPage() {
             className="text-center max-w-3xl mx-auto"
           >
             <h2 className="text-4xl font-bold text-background">How It Works</h2>
-            <p className="mt-4 text-gray-300">
+            <p className="mt-4 text-background">
               Simple three-step workflow to extract text from any image CAPTCHA:
             </p>
           </motion.div>
@@ -128,7 +98,7 @@ export default function ImageCaptchaPage() {
               <h4 className="text-xl font-semibold text-background">
                 1. Submit Image URL
               </h4>
-              <p className="text-center text-gray-300">
+              <p className="text-center text-background">
                 Provide the CAPTCHA image URL for processing.
               </p>
             </div>
@@ -137,7 +107,7 @@ export default function ImageCaptchaPage() {
               <h4 className="text-xl font-semibold text-background">
                 2. AI Processing
               </h4>
-              <p className="text-center text-gray-300">
+              <p className="text-center text-background">
                 Advanced AI detects characters, corrects distortions, and
                 extracts text accurately.
               </p>
@@ -147,7 +117,7 @@ export default function ImageCaptchaPage() {
               <h4 className="text-xl font-semibold text-background">
                 3. Receive Text
               </h4>
-              <p className="text-center text-gray-300">
+              <p className="text-center text-background">
                 Get the extracted text instantly, ready for automation,
                 verification, or scraping workflows.
               </p>
@@ -211,7 +181,7 @@ export default function ImageCaptchaPage() {
             ].map((feature, i) => (
               <div
                 key={i}
-                className="flex flex-col items-center gap-4 rounded-2xl border border-gray-200 bg-white p-6 shadow hover:shadow-lg transition"
+                className="flex flex-col items-center gap-4 rounded-2xl border border-gray-200 bg-card p-6 shadow hover:shadow-lg transition"
               >
                 <feature.icon className="w-10 h-10 text-primary" />
                 <h4 className="text-xl font-semibold">{feature.title}</h4>
@@ -221,78 +191,26 @@ export default function ImageCaptchaPage() {
           </motion.div>
         </section>
 
-        {/* DEMO */}
-        <section id="demo" className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-4xl font-bold text-center mb-10">Live Demo</h2>
-
-            <div className="max-w-3xl mx-auto rounded-3xl border border-primary bg-background/50 p-8 shadow-2xl hover:shadow-3xl transition-all">
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Image URL</label>
-                  <input
-                    className="mt-2 w-full rounded-2xl border border-primary/40 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition"
-                    placeholder="https://example.com/captcha.png"
-                    value={imageUrl}
-                    onChange={(e) => setImageUrl(e.target.value)}
-                  />
-                </div>
-
-                <button
-                  onClick={solveCaptcha}
-                  disabled={loading}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-4 text-background font-semibold shadow-lg hover:bg-primary/90 transition-all transform hover:scale-105 disabled:opacity-50"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" /> Solving...
-                    </>
-                  ) : (
-                    <>
-                      Extract Text <Upload className="w-4 h-4" />
-                    </>
-                  )}
-                </button>
-
-                {result && (
-                  <pre className="rounded-2xl border border-gray-200 bg-gray-50 p-4 text-sm whitespace-pre-wrap shadow-inner">
-                    {result}
-                  </pre>
-                )}
-
-                {error && (
-                  <p className="text-sm text-red-600 font-medium">{error}</p>
-                )}
-              </div>
-            </div>
-          </motion.div>
-        </section>
-
         {/* API Example */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="max-w-7xl mx-auto bg-gray-900 rounded-3xl p-10 shadow-xl space-y-6"
+          className="max-w-7xl mx-auto bg-foreground rounded-3xl p-10 shadow-xl space-y-6"
         >
           <h4 className="text-3xl font-bold text-background text-center mb-4">
             API Example
           </h4>
 
-          <p className="text-gray-300 text-center">
+          <p className="text-background text-center">
             Use this endpoint to extract text from any CAPTCHA image. Simply
             send a POST request with the image URL and receive the extracted
             text in response.
           </p>
 
-          <pre className="rounded-2xl bg-gray-800 p-6 text-sm text-green-400 overflow-x-auto">
-            {`POST /api/imageCaptcha
+          <pre className="rounded-2xl bg-gray-700 p-6 text-sm text-green-400 overflow-x-auto">
+            {`POST /api/public/imageCaptcha
 Content-Type: application/json
 
 {
@@ -305,15 +223,15 @@ Response:
 }`}
           </pre>
 
-          <div className="space-y-4 text-gray-300">
+          <div className="space-y-4 text-background">
             <h4 className="text-xl font-semibold text-background">
               Step 1: Submit Image URL
             </h4>
             <p>
               Send a POST request to{" "}
-              <code className="text-green-400">/api/imageCaptcha</code> with a
-              valid image URL. Ensure the URL points directly to the image file
-              (PNG, JPG, or GIF).
+              <code className="text-green-400">/api/public/imageCaptcha</code>{" "}
+              with a valid image URL. Ensure the URL points directly to the
+              image file (PNG, JPG, or GIF).
             </p>
 
             <h4 className="text-xl font-semibold text-background">
@@ -336,7 +254,7 @@ Response:
             </p>
           </div>
 
-          <p className="text-center text-gray-400 mt-6">
+          <p className="text-center text-background/50 mt-6">
             Integrate this endpoint into your scripts or applications to
             automate CAPTCHA solving seamlessly.
           </p>
