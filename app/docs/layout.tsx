@@ -21,15 +21,14 @@ export default async function DocsLayout({
   const pageMap = await getPageMap("/docs");
 
   return (
-      <div suppressHydrationWarning>
-        <Layout
-          sidebar={sidebar}
-          navbar={navbar}
-          pageMap={pageMap}
-          footer={footer}
-        >
-          {children}
-        </Layout>
-      </div>
+    <Layout
+      sidebar={sidebar}
+      navbar={navbar}
+      pageMap={pageMap}
+      footer={footer}
+      darkMode={false}
+    >
+      {children}
+    </Layout>
   );
 }

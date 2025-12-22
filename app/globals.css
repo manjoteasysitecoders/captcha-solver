@@ -33,8 +33,8 @@
 }
 
 .dark {
-  --background: #00201b;      
-  --foreground: #deece6; 
+  --background: #00201b;
+  --foreground: #deece6;
   --card: #00201b;
   --card-foreground: #f1f1f1;
 }
@@ -42,5 +42,10 @@
 @layer base {
   body {
     @apply bg-background text-foreground;
+  }
+}
+@media (max-width: 768px) {
+  aside[class*="nextra"] {
+    background-color: var(--background);
   }
 }
