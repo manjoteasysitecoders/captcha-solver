@@ -94,6 +94,17 @@ export const authOptions: AuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.sub = (user as any).id;
+
+        const dbUser = await prisma.user.findUnique({
+          where: { id: (user as any).id },
+          select: {
+            provider: true,
+            image: true,
+          },
+        });
+
+        token.provider = dbUser?.provider;
+        token.image = dbUser?.image;
       }
       return token;
     },
@@ -101,6 +112,8 @@ export const authOptions: AuthOptions = {
     async session({ session, token }) {
       if (session.user && token.sub) {
         (session.user as any).id = token.sub;
+        (session.user as any).provider = token.provider;
+        session.user.image = token.image as string | null;
       }
       return session;
     },

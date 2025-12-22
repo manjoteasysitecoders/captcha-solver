@@ -4,12 +4,14 @@ import { Menu } from "lucide-react";
 import ThemeToggle from "../ui/ThemeToggle";
 import Link from "next/link";
 import { User } from "lucide-react";
+import { useUser } from "@/context/UserContext";
 
 export default function Topbar({
   toggleSidebar,
 }: {
   toggleSidebar: () => void;
 }) {
+  const { user } = useUser();
   return (
     <header
       className="
@@ -36,7 +38,15 @@ export default function Topbar({
           className="h-10 w-10 rounded-full bg-primary text-primary-foreground
                      flex items-center justify-center"
         >
-          <User size={18} />
+          {user?.image ? (
+            <img
+              src={user.image}
+              alt="Profile"
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <User size={18} />
+          )}
         </Link>
       </div>
     </header>

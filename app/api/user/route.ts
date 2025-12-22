@@ -17,6 +17,8 @@ export async function GET() {
       email: true,
       credits: true,
       totalRequests: true,
+      image: true,
+      provider: true,
       currentPlanId: true,
       currentPlan: {
         select: {

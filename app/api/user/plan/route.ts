@@ -20,8 +20,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Plan not found" }, { status: 404 });
 
     const updatedUser = await prisma.user.update({
-      where: { id: user.id },
-      data: { currentPlanId: plan.id, credits: { increment: plan.credits } },
+      where: { email: user.email },
+      data: {
+        currentPlanId: plan.id,
+        credits: { increment: plan.credits },
+      },
     });
 
     return NextResponse.json({

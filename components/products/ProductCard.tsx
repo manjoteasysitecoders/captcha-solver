@@ -35,14 +35,13 @@ export default function ProductCard({
         hover:border-primary/40
       "
     >
-      {/* Gradient hover glow */}
       <div
         className="
           pointer-events-none absolute inset-0
           rounded-2xl opacity-0
           group-hover:opacity-100
           transition
-          bg-gradient-to-br from-primary/10 via-transparent to-transparent
+          bg-linear-to-br from-primary/10 via-transparent to-transparent
         "
       />
 
@@ -78,7 +77,7 @@ export default function ProductCard({
     font-mono
     border border-primary/50
     whitespace-pre-wrap
-    break-words
+    wrap-break-word
   "
         >
           {example}

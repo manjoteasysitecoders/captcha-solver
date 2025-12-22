@@ -19,7 +19,7 @@ export const products: Product[] = [
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    "Authorization": "Bearer YOUR_API_KEY",
+    "x-api-key": "Bearer YOUR_API_KEY",
   },
   body: JSON.stringify({
     imageUrl: "https://example.com/captcha.png",
@@ -38,7 +38,7 @@ console.log(data.text);`,
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    "Authorization": "Bearer YOUR_API_KEY",
+    "x-api-key": "Bearer YOUR_API_KEY",
   },
   body: JSON.stringify({ text: "Solve this CAPTCHA" }),
 });
@@ -58,7 +58,7 @@ formData.append("url",
 const response = await fetch("/api/public/voiceCaptcha", {
   method: "POST",
   headers: {
-    "Authorization": "Bearer YOUR_API_KEY",
+    "x-api-key": "Bearer YOUR_API_KEY",
   },
   body: formData,
 });

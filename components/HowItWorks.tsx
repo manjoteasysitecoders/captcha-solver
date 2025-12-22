@@ -167,7 +167,7 @@ export default function HowItWorks() {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    "Authorization": "Bearer YOUR_API_KEY",
+    "x-api-key": "Bearer YOUR_API_KEY",
   },
   body: JSON.stringify({
     imageUrl: "https://example.com/captcha.png",

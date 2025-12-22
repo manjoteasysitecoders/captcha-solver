@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  User,
-  Key,
-  CreditCard,
-
-} from "lucide-react";
+import { User, Key, CreditCard } from "lucide-react";
 import { useUser } from "@/context/UserContext";
 import { ChangePasswordModal } from "@/components/dashboard/ChangePasswordModal";
 import { useState } from "react";
@@ -18,6 +13,8 @@ export default function ProfilePage() {
 
   if (!user) return <p>Loading...</p>;
 
+  const isGoogleUser = user.provider === "google";
+
   return (
     <div className="space-y-8">
       <header>
@@ -29,28 +26,45 @@ export default function ProfilePage() {
 
       <div className="grid gap-8">
         <Card>
-          <div className="flex items-center gap-4">
-            <div className="h-16 w-16 rounded-full bg-primary flex items-center justify-center text-white">
-              <User size={32} />
-            </div>
-            <div>
-              <p className="text-sm text-foreground/80">{user.email}</p>
-            </div>
-          </div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              {user.image ? (
+                <img
+                  src={user.image}
+                  alt="Profile"
+                  className="h-16 w-16 rounded-full object-cover"
+                />
+              ) : (
+                <div className="h-16 w-16 rounded-full bg-primary flex items-center justify-center text-white">
+                  <User size={32} />
+                </div>
+              )}
 
-          <div className="mt-6 flex justify-between items-center">
-            <button
-              onClick={() => setOpen(true)}
-              className="text-sm font-medium text-indigo-600 hover:underline"
-            >
-              Change Password
-            </button>
-            <button
-              onClick={() => setDeleteOpen(true)}
-              className="text-sm font-medium text-red-600 hover:underline"
-            >
-              Delete Account
-            </button>
+              <div>
+                <p className="text-sm text-foreground/80">{user.email}</p>
+                <p className="text-xs text-foreground/60 capitalize">
+                  {user.provider} account
+                </p>
+              </div>
+            </div>
+
+            <div className="flex justify-center items-center">
+              {!isGoogleUser && (
+                <button
+                  onClick={() => setOpen(true)}
+                  className="p-2 text-sm font-medium text-indigo-600 hover:underline"
+                >
+                  Change Password
+                </button>
+              )}
+
+              <button
+                onClick={() => setDeleteOpen(true)}
+                className="p-2 text-sm font-medium text-red-600 hover:underline"
+              >
+                Delete Account
+              </button>
+            </div>
           </div>
         </Card>
 

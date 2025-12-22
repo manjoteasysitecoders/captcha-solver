@@ -67,7 +67,7 @@ const CaptchaFlowSection: FC = () => {
   }, []);
 
   return (
-    <section className="relative w-full py-20 bg-gradient-to-b from-primary/10 to-background">
+    <section className="relative w-full py-20 bg-linear-to-b from-primary/10 to-background">
       {/* Header */}
       <div className="text-center max-w-2xl mx-auto mb-20">
         <h2 className="text-3xl md:text-4xl font-bold tracking-tight">

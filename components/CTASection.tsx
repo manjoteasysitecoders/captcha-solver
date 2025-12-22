@@ -7,8 +7,8 @@ import { motion } from "framer-motion";
 export default function CTASection() {
   return (
     <section className="max-w-7xl mx-auto relative bg-foreground rounded-3xl overflow-hidden py-10 px-6 md:px-12 lg:px-60">
-      <div className="absolute -top-40 -right-40 rounded-full bg-gradient-to-tr from-primary/30 to-purple-500/20 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-40 -left-40 rounded-full bg-gradient-to-tr from-purple-500/20 to-primary/20 blur-3xl pointer-events-none" />
+      <div className="absolute -top-40 -right-40 rounded-full bg-linear-to-tr from-primary/30 to-purple-500/20 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-40 -left-40 rounded-full bg-linear-to-tr from-purple-500/20 to-primary/20 blur-3xl pointer-events-none" />
 
       <div className="relative z-10 max-w-3xl mx-auto text-center">
         <motion.span
