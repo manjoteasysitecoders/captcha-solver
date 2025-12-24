@@ -34,7 +34,7 @@ export async function transcribeFromUrl(audioUrl: string) {
   const transcription = await elevenlabs.speechToText.convert({
     file: audioBlob,
     modelId: "scribe_v1",
-    tagAudioEvents: true,
+    tagAudioEvents: false,
     languageCode: "eng",
     diarize: true,
   });
@@ -49,7 +49,7 @@ export async function transcribeFromFile(file: Blob) {
   const transcription = await elevenlabs.speechToText.convert({
     file,
     modelId: "scribe_v1",
-    tagAudioEvents: true,
+    tagAudioEvents: false,
     languageCode: "eng",
     diarize: true,
   });
