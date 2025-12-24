@@ -27,6 +27,12 @@ export default async function DocsLayout({
       pageMap={pageMap}
       footer={footer}
       darkMode={false}
+      nextThemes={{
+        attribute: "class",
+        defaultTheme: "light",
+        disableTransitionOnChange: true,
+        storageKey: "theme",
+      }}
     >
       {children}
     </Layout>
