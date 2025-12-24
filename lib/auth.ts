@@ -80,7 +80,7 @@ export const authOptions: AuthOptions = {
             data: {
               email: user.email,
               image: user.image ?? undefined,
-              credits: 500,
+              credits: 10,
               totalRequests: 0,
               provider: "google",
             },

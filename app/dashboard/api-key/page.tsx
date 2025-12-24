@@ -13,7 +13,7 @@ interface ApiKey {
 }
 
 export default function ApiKeyPage() {
-  const { user, refreshUser } = useUser();
+  const { refreshUser } = useUser();
   const [keys, setKeys] = useState<ApiKey[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingId, setLoadingId] = useState<string | null>(null);

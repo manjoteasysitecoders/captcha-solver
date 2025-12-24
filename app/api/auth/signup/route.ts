@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
       data: {
         email,
         password: hashedPassword,
-        credits: 500,
+        credits: 10,
         provider: "credentials",
       },
     });

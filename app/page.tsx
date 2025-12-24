@@ -16,7 +16,7 @@ export default function page() {
     <HowItWorks />
     <PricingSection />
     <UseCasesSection />
-    <BlogSection />
+    {/* <BlogSection /> */}
     <WhyBetterSection />
     <CTASection />
     <Footer />

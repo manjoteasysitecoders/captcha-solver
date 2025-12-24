@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Image, Type, Mic } from "lucide-react";
 import { toast } from "react-toastify";
+import { useUser } from "@/context/UserContext";
 
 type CaptchaType = "image" | "text" | "voice";
 
@@ -13,6 +14,8 @@ export default function PlaygroundPage() {
   const [file, setFile] = useState<File | null>(null);
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+
+  const { refreshUser } = useUser();
 
   async function solveCaptcha() {
     if (!apiKey.trim()) {
@@ -70,6 +73,7 @@ export default function PlaygroundPage() {
 
       setResult(data);
       toast.success("Captcha solved successfully");
+      await refreshUser();
     } catch (err: any) {
       toast.error(err.message);
     } finally {
