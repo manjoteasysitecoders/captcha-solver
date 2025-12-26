@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getAuthUser } from "@/lib/auth";
-import { generateApiKey, hashApiKey } from "@/lib/apiKey";
+import { generateApiKey, encryptApiKey, decryptApiKey } from "@/lib/apiKey";
 
 export async function GET() {
   const user = await getAuthUser();
@@ -17,12 +17,20 @@ export async function GET() {
     where: { userId: dbUser.id },
     select: {
       id: true,
+      key: true,         
       createdAt: true,
       lastUsedAt: true,
     },
   });
 
-  return NextResponse.json(keys);
+  const decryptedKeys = keys.map(k => ({
+    id: k.id,
+    key: decryptApiKey(k.key),
+    createdAt: k.createdAt,
+    lastUsedAt: k.lastUsedAt,
+  }));
+
+  return NextResponse.json(decryptedKeys);
 }
 
 export async function POST() {
@@ -46,17 +54,17 @@ export async function POST() {
   });
 
   const plainKey = generateApiKey();
-  const hashedKey = await hashApiKey(plainKey);
+  const encryptedKey = encryptApiKey(plainKey);
 
   await prisma.apiKey.create({
     data: {
       userId: dbUser.id,
-      key: hashedKey,
+      key: encryptedKey, 
     },
   });
 
   return NextResponse.json({
-    key: plainKey, // shown once
+    key: plainKey, 
     createdAt: new Date(),
   });
 }

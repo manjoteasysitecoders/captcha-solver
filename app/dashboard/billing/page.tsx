@@ -1,6 +1,5 @@
 "use client";
 
-import { PricingCard } from "@/components/PricingCard";
 import { useUser } from "@/context/UserContext";
 
 export default function BillingPage() {
@@ -25,7 +24,6 @@ export default function BillingPage() {
           Credits Remaining: {user.credits.toLocaleString()}
         </p>
       </div>
-      <PricingCard />
     </div>
   );
 }

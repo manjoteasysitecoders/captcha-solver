@@ -26,8 +26,8 @@ export default function ProfilePage() {
 
       <div className="grid gap-8">
         <Card>
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between lg:gap-4">
+            <div className="flex flex-col justify-center items-center gap-4 sm:flex-row">
               {user.image ? (
                 <img
                   src={user.image}
@@ -48,11 +48,11 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            <div className="flex justify-center items-center">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
               {!isGoogleUser && (
                 <button
                   onClick={() => setOpen(true)}
-                  className="p-2 text-sm font-medium text-indigo-600 hover:underline"
+                  className="p-2 text-sm font-medium text-indigo-600 hover:underline text-left"
                 >
                   Change Password
                 </button>
@@ -60,7 +60,7 @@ export default function ProfilePage() {
 
               <button
                 onClick={() => setDeleteOpen(true)}
-                className="p-2 text-sm font-medium text-red-600 hover:underline"
+                className="p-2 text-sm font-medium text-red-600 hover:underline text-left"
               >
                 Delete Account
               </button>

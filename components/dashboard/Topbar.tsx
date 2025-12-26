@@ -16,7 +16,7 @@ export default function Topbar({
       className="
         h-20 px-4
         flex items-center
-        bg-white/70 dark:bg-card/70
+        bg-white/70
         backdrop-blur-xl
         border-b border-border/50
       "

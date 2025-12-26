@@ -1,15 +1,39 @@
 import crypto from "crypto";
 import prisma from "@/lib/prisma";
-import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
+
+const ALGO = "aes-256-gcm";
+const KEY = Buffer.from(process.env.API_KEY_SECRET! , "hex");
 
 export function generateApiKey() {
   return crypto.randomBytes(32).toString("hex");
 }
 
-export async function hashApiKey(key: string) {
-  const salt = await bcrypt.genSalt(10);
-  return bcrypt.hash(key, salt);
+export function encryptApiKey(key: string) {
+  const iv = crypto.randomBytes(12);
+  const cipher = crypto.createCipheriv(ALGO, KEY, iv);
+
+  const encrypted = Buffer.concat([
+    cipher.update(key, "utf8"),
+    cipher.final(),
+  ]);
+
+  const tag = cipher.getAuthTag();
+
+  return Buffer.concat([iv, tag, encrypted]).toString("base64");
+}
+
+export function decryptApiKey(payload: string) {
+  const buf = Buffer.from(payload, "base64");
+
+  const iv = buf.subarray(0, 12);
+  const tag = buf.subarray(12, 28);
+  const encrypted = buf.subarray(28);
+
+  const decipher = crypto.createDecipheriv(ALGO, KEY, iv);
+  decipher.setAuthTag(tag);
+
+  return decipher.update(encrypted) + decipher.final("utf8");
 }
 
 export async function authenticateApiKey(rawKey: string) {
@@ -23,10 +47,14 @@ export async function authenticateApiKey(rawKey: string) {
 
   let matchedKey = null;
   for (const k of keyRecords) {
-    const isValid = await bcrypt.compare(rawKey, k.key);
-    if (isValid) {
-      matchedKey = k;
-      break;
+    try {
+      const decrypted = decryptApiKey(k.key);
+      if (decrypted === rawKey) {
+        matchedKey = k;
+        break;
+      }
+    } catch (err) {
+      continue;
     }
   }
 

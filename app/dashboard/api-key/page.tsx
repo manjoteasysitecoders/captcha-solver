@@ -36,7 +36,7 @@ export default function ApiKeyPage() {
 
   const copyKey = (key?: string) => {
     if (!key) {
-      toast("API key is hidden. Regenerate to copy.");
+      toast("Regenerate API Key.");
       return;
     }
     navigator.clipboard.writeText(key);
@@ -63,7 +63,7 @@ export default function ApiKeyPage() {
         },
       ]);
 
-      toast("Copy this key now. It will not be shown again.");
+      toast("Copy this key now and paste it in solve CAPTCHAs page.");
 
       await refreshUser();
     } catch (err) {
@@ -125,8 +125,12 @@ export default function ApiKeyPage() {
                 </div>
               </div>
 
-              <code className="block w-full p-3 rounded-xl font-mono border border-primary/20 bg-primary/10 break-all text-sm sm:text-base">
-                {api.key ?? "********************************"}
+              <code
+                className="block w-full p-3 rounded-xl font-mono border border-primary/20 bg-primary/10 break-all text-sm sm:text-base cursor-pointer select-all"
+                onClick={() => copyKey(api.key)}
+                title="Click to copy API key"
+              >
+                {"•".repeat(20)}
               </code>
             </div>
           ))}

@@ -94,7 +94,7 @@ export default function PlaygroundPage() {
       <p className="text-primary font-medium my-4">Choose CAPTCHA type.</p>
 
       {/* CAPTCHA Type Selector */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <Selector
           active={type === "image"}
           onClick={() => {
@@ -125,7 +125,7 @@ export default function PlaygroundPage() {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* API Key Input */}
         <div className="rounded-3xl border border-primary bg-card p-4 shadow-lg transition hover:shadow-xl">
           <label className="text-sm font-semibold text-primary">
@@ -143,7 +143,7 @@ export default function PlaygroundPage() {
         </div>
 
         {/* Input Section */}
-        <div className="rounded-3xl p-6 border border-primary bg-card shadow-md space-y-4 transition hover:shadow-lg">
+        <div className="rounded-3xl p-4 border border-primary bg-card shadow-md space-y-4 transition hover:shadow-lg">
           {type !== "text" && (
             <input
               value={value}

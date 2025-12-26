@@ -102,11 +102,14 @@ export const authOptions: AuthOptions = {
           select: {
             provider: true,
             image: true,
+            email: true,
           },
         });
 
         token.provider = dbUser?.provider;
         token.image = dbUser?.image;
+
+        token.isAdmin = dbUser?.email === process.env.ADMIN_EMAIL;
       }
       return token;
     },
@@ -115,6 +118,7 @@ export const authOptions: AuthOptions = {
       if (session.user && token.sub) {
         (session.user as any).id = token.sub;
         (session.user as any).provider = token.provider;
+        (session.user as any).isAdmin = token.isAdmin;
         session.user.image = token.image as string | null;
       }
       return session;
