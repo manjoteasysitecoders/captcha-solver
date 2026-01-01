@@ -1,4 +1,3 @@
-import jwt from "jsonwebtoken";
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
@@ -17,6 +16,10 @@ export async function middleware(req: NextRequest) {
   }
 
   const userToken = await getToken({ req });
+
+  if (userToken && userToken.active === false && pathname !== "/blocked") {
+    return NextResponse.redirect(new URL("/blocked", req.url));
+  }
 
   if (!userToken && pathname.startsWith("/dashboard")) {
     return NextResponse.redirect(new URL("/signin", req.url));

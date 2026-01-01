@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
 
@@ -25,6 +25,14 @@ const itemVariants: Variants = {
 };
 
 export default function SignInPage() {
+  const params = useSearchParams();
+  const blocked = params.get("blocked");
+  const oauthError = params.get("error");
+  const oauthErrorMessage =
+    oauthError && oauthError.toLowerCase().includes("block")
+      ? "Your account has been blocked. Please contact support."
+      : oauthError;
+
   return (
     <motion.section
       className="relative min-h-screen overflow-hidden"
@@ -95,6 +103,18 @@ export default function SignInPage() {
               </p>
             </div>
 
+            {blocked && (
+              <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
+                Your account has been blocked. Please contact support.
+              </div>
+            )}
+
+            {oauthError && (
+              <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
+                {oauthErrorMessage}
+              </div>
+            )}
+
             <SigninForm />
 
             <p className="mt-8 text-center text-sm">
@@ -123,6 +143,7 @@ function SigninForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    console.log("signin: submitting", { email });
     setLoading(true);
     setError(null);
 
@@ -133,12 +154,19 @@ function SigninForm() {
         redirect: false,
       });
 
+      console.log("signin result", result);
+
       if (!result || result.error) {
-        setError("Invalid email or password");
+        const msg = result?.error ?? "Invalid email or password";
+        setError(
+          msg.toLowerCase().includes("block")
+            ? "Your account has been blocked. Please contact support."
+            : msg
+        );
         return;
       }
 
-      router.push("/dashboard");
+      router.replace("/dashboard");
     } finally {
       setLoading(false);
     }
@@ -204,6 +232,7 @@ function SigninForm() {
 
       <button
         type="button"
+        disabled={loading}
         onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
         className="
           mt-3 h-12 w-full

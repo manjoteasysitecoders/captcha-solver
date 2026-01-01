@@ -1,5 +1,5 @@
 import DashboardUI from "./DashboardUI";
-import { authOptions, getAuthUser } from "@/lib/auth";
+import { getAuthUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({
@@ -14,7 +14,7 @@ export default async function DashboardLayout({
   }
 
   if (user.active === false) {
-    redirect("/signup");
+    redirect("/blocked");
   }
 
   return <DashboardUI>{children}</DashboardUI>;

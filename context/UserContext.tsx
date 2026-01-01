@@ -45,6 +45,10 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       if (!res.ok) throw new Error("Failed to fetch user");
       const data = await res.json();
       setUser(data);
+
+      if (data && data.active === false) {
+        window.location.href = "/blocked";
+      }
     } catch (err) {
       console.error(err);
     }

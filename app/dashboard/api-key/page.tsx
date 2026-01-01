@@ -23,6 +23,17 @@ export default function ApiKeyPage() {
     async function fetchKey() {
       try {
         const res = await fetch("/api/api-key");
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ error: "Unknown" }));
+          if (res.status === 403) {
+            toast(err.error || "Your account has been blocked. Please contact support.");
+            window.location.href = "/blocked";
+          }
+
+          toast(err.error || "Failed to fetch API keys");
+          return;
+        }
+
         const data = await res.json();
         setKeys(data);
       } catch (err) {
@@ -48,7 +59,13 @@ export default function ApiKeyPage() {
     try {
       const res = await fetch("/api/api-key", { method: "POST" });
       if (!res.ok) {
-        const error = await res.json();
+        const error = await res.json().catch(() => ({ error: "Unknown" }));
+        if (res.status === 403) {
+          toast(error.error || "Your account has been blocked. Please contact support.");
+          window.location.href = "/blocked";
+          return;
+        }
+
         toast(error.error || "Cannot generate API key.");
         return;
       }

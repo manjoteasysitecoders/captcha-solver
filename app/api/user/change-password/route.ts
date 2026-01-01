@@ -1,14 +1,17 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
 import prisma from "@/lib/prisma";
-import { authOptions } from "@/lib/auth";
+import { getAuthUser } from "@/lib/auth";
 import bcrypt from "bcryptjs";
 
 export async function POST(req: Request) {
-  const session = await getServerSession(authOptions);
+  const user = await getAuthUser();
 
-  if (!session?.user?.email) {
+  if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  if (user.active === false) {
+    return NextResponse.json({ error: "Account blocked" }, { status: 403 });
   }
 
   const { currentPassword, newPassword } = await req.json();
@@ -24,15 +27,15 @@ export async function POST(req: Request) {
     );
   }
 
-  const user = await prisma.user.findUnique({
-    where: { email: session.user.email },
+  const dbUser = await prisma.user.findUnique({
+    where: { id: user.id },
   });
 
-  if (!user) {
+  if (!dbUser) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
-  const isValid = await bcrypt.compare(currentPassword, user.password!);
+  const isValid = await bcrypt.compare(currentPassword, dbUser.password!);
   if (!isValid) {
     return NextResponse.json(
       { error: "Current password is incorrect" },
@@ -43,7 +46,7 @@ export async function POST(req: Request) {
   const hashed = await bcrypt.hash(newPassword, 10);
 
   await prisma.user.update({
-    where: { id: user.id },
+    where: { id: dbUser.id },
     data: { password: hashed },
   });
 
