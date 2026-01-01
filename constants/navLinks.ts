@@ -1,4 +1,4 @@
-import { CreditCard, Dock, KeyRound, LayoutDashboard, RotateCcw } from "lucide-react";
+import { CreditCard, Dock, KeyRound, LayoutDashboard, RotateCcw, Users } from "lucide-react";
 
 export const navLinks = [
   {
@@ -30,3 +30,14 @@ export const dashboardSidebarLinks = [
   { href: "/docs", label: "View Documentation", icon: Dock },
   { href: "/dashboard/playground", label: "Solve CAPTCHA", icon: RotateCcw }
 ];
+
+export const adminDashboardSidebarLinks = [
+  { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+  { name: "Users", href: "/admin/dashboard/users", icon: Users },
+//   { name: "API Keys", href: "/admin/dashboard/api-keys", icon: Key },
+//   { name: "Logs", href: "/admin/dashboard/logs", icon: FileText },
+  { name: "Plans", href: "/admin/dashboard/plans", icon: CreditCard },
+  {  name: "Documentation", href: "/docs", icon: Dock },
+  // { name: "Settings", href: "/admin/dashboard/settings", icon: Settings },
+];
+

@@ -4,30 +4,42 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { Eye, EyeOff, Loader2, Shield } from "lucide-react";
-import { signIn } from "next-auth/react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent) {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
-    const res = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
+    try {
+      const res = await fetch("/api/admin/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
 
-    if (res?.ok) {
-      router.push("/admin");
-    } else {
-      toast("Invalid admin credentials");
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.error || "Login failed");
+        return;
+      }
+
+      router.push("/admin/dashboard");
+    } catch (err) {
+      console.error("Login error:", err);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-background via-primary to-foreground px-4">
@@ -45,17 +57,17 @@ export default function AdminLoginPage() {
           </p>
         </div>
 
-        <label className="block text-md text-white/80 mb-2">Admin Email</label>
+        <label className="block text-md text-white/80 mb-2">Username</label>
         <input
-          type="email"
-          placeholder="admin@example.com"
+          type="text"
+          placeholder="admin"
           className="w-full mb-5 px-4 py-3 rounded-lg bg-white/10 text-white placeholder:text-white/40 border border-white/10 focus:outline-none focus:ring-2 focus:ring-foreground"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           required
         />
 
-        <label className="block text-sm text-white/80 mb-2">Password</label>
+        <label className="block text-md text-white/80 mb-2">Password</label>
         <div className="relative mb-6">
           <input
             type={showPassword ? "text" : "password"}
@@ -75,6 +87,7 @@ export default function AdminLoginPage() {
         </div>
 
         <button
+          type="submit"
           disabled={loading}
           className="w-full flex items-center justify-center gap-2 rounded-lg bg-foreground hover:bg-foreground/80 transition py-3 font-semibold text-white disabled:opacity-60"
         >

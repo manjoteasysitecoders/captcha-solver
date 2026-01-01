@@ -21,7 +21,7 @@ export default function Sidebar({ open }: { open: boolean }) {
     <aside
       className={`
         fixed inset-y-0 left-0 z-40
-        bg-white shadow-2xl
+       bg-white/50 shadow-2xl
         transition-all duration-300 flex flex-col
         ${open ? "w-70 px-6" : "w-20 px-3"}
       `}
@@ -107,7 +107,7 @@ export function CreditsCard({ open, used, total, plan }: CreditsCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
       className={`
-        mt-4 rounded-2xl border border-border
+        mt-4 rounded-2xl border border-primary
         bg-card text-card-foreground shadow-lg
         ${open ? "p-4" : "p-3"}
       `}

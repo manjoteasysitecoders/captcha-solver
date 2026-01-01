@@ -7,6 +7,10 @@ export async function POST(req: Request) {
   if (!user)
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
+  if (user.active === false) {
+    return NextResponse.json({ message: "Account blocked" }, { status: 403 });
+  }
+
   const { planId } = await req.json();
   if (!planId)
     return NextResponse.json(

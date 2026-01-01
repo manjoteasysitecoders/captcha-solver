@@ -1,6 +1,5 @@
-import { getServerSession } from "next-auth";
 import DashboardUI from "./DashboardUI";
-import { authOptions } from "@/lib/auth";
+import { authOptions, getAuthUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({
@@ -8,10 +7,14 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession(authOptions);
+  const user = await getAuthUser();
 
-  if (!session) {
+  if (!user) {
     redirect("/signin");
+  }
+
+  if (user.active === false) {
+    redirect("/signup");
   }
 
   return <DashboardUI>{children}</DashboardUI>;

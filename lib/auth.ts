@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import bcrypt from "bcryptjs";
 import { type AuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
@@ -41,6 +40,10 @@ export const authOptions: AuthOptions = {
 
         if (!user) return null;
 
+        if (!user.active) {
+          throw new Error("Account is blocked");
+        }
+
         if (!user.password) {
           return null;
         }
@@ -68,13 +71,15 @@ export const authOptions: AuthOptions = {
   callbacks: {
     async signIn({ user, account }) {
       if (account?.provider === "google") {
-        if (!user.email) {
-          return false;
-        }
+        if (!user.email) return false;
 
         let dbUser = await prisma.user.findUnique({
           where: { email: user.email },
         });
+
+        if (dbUser && !dbUser.active) {
+          throw new Error("Account is blocked");
+        }
 
         if (!dbUser) {
           dbUser = await prisma.user.create({
@@ -84,9 +89,11 @@ export const authOptions: AuthOptions = {
               credits: 10,
               totalRequests: 0,
               provider: "google",
+              active: true,
             },
           });
         }
+
         (user as any).id = dbUser.id;
       }
 
@@ -102,23 +109,24 @@ export const authOptions: AuthOptions = {
           select: {
             provider: true,
             image: true,
-            email: true,
+            active: true,
           },
         });
 
         token.provider = dbUser?.provider;
         token.image = dbUser?.image;
+        token.active = dbUser?.active;
+      } 
 
-        token.isAdmin = dbUser?.email === process.env.ADMIN_EMAIL;
-      }
       return token;
     },
+
 
     async session({ session, token }) {
       if (session.user && token.sub) {
         (session.user as any).id = token.sub;
         (session.user as any).provider = token.provider;
-        (session.user as any).isAdmin = token.isAdmin;
+        (session.user as any).active = token.active;
         session.user.image = token.image as string | null;
       }
       return session;
@@ -129,5 +137,12 @@ export const authOptions: AuthOptions = {
 export async function getAuthUser() {
   const session = await getServerSession(authOptions);
   if (!session?.user) return null;
-  return session.user as { id: string; email: string };
+
+  const dbUser = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { id: true, email: true, active: true },
+  });
+
+  if (!dbUser) return null;
+  return dbUser;
 }

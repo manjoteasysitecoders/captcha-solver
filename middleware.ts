@@ -28,34 +28,16 @@ export async function middleware(req: NextRequest) {
 
   if (pathname.startsWith("/admin")) {
     const adminToken = req.cookies.get("admin_token")?.value;
-    let isAdminAuthenticated = false;
 
-    if (adminToken) {
-      try {
-        jwt.verify(adminToken, process.env.JWT_SECRET!);
-        isAdminAuthenticated = true;
-      } catch {
-        isAdminAuthenticated = false;
-      }
-    }
-
-    if (pathname === "/admin") {
-      return NextResponse.redirect(
-        new URL(
-          isAdminAuthenticated ? "/admin/dashboard" : "/admin/login",
-          req.url
-        )
-      );
-    }
-
-    if (pathname.startsWith("/admin/dashboard") && !isAdminAuthenticated) {
+    if (!adminToken && pathname !== "/admin/login") {
       return NextResponse.redirect(new URL("/admin/login", req.url));
     }
 
-    if (pathname.startsWith("/admin/login") && isAdminAuthenticated) {
+    if (adminToken && (pathname === "/admin/login" || pathname === "/admin")) {
       return NextResponse.redirect(new URL("/admin/dashboard", req.url));
     }
   }
+
   return NextResponse.next();
 }
 

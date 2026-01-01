@@ -4,10 +4,10 @@ declare module "next-auth" {
   interface Session {
     user: {
       id: string;
+      active?: boolean;
     } & DefaultSession["user"];
   }
 
-  // Optional: include `id` on the User object
   interface User {
     id: string;
   }
@@ -16,5 +16,6 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
   interface JWT {
     id?: string;
+    active?: boolean;
   }
 }

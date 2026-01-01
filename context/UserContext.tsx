@@ -19,6 +19,7 @@ interface Plan {
 interface User {
   id: string;
   email: string;
+  active: boolean;
   credits: number;
   currentPlan?: Plan | null;
   totalRequests: number;

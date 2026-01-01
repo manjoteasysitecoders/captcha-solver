@@ -20,13 +20,13 @@ export default function DashboardUI({
 
   return (
     <UserProvider>
-      <div className="flex h-screen bg-background">
+      <div className="flex h-screen">
         <Sidebar open={sidebarOpen} />
 
         <div
           className={`
             flex flex-col flex-1 transition-all duration-300
-            ${sidebarOpen ? "ml-72" : "ml-20"}
+            ${sidebarOpen ? "ml-70" : "ml-20"}
           `}
         >
           <Topbar toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
