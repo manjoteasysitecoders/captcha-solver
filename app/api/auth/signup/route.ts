@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth";
+import { FREE_CREDITS } from "@/constants/credits";
 
 export async function POST(req: NextRequest) {
   try {
@@ -34,7 +35,7 @@ export async function POST(req: NextRequest) {
       data: {
         email,
         password: hashedPassword,
-        credits: 10,
+        credits: FREE_CREDITS,
         provider: "credentials",
       },
     });

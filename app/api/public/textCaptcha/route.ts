@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
     await prisma.user.update({
       where: { id: keyRecord.userId },
       data: {
-        credits: { decrement: 8 },
+        credits: { decrement: 10 },
         totalRequests: { increment: 1 },
       },
     });

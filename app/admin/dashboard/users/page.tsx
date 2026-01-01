@@ -69,7 +69,7 @@ export default function AdminUsersPage() {
         </p>
       </div>
 
-      <div className="rounded-2xl border border-primary bg-card shadow-lg overflow-hidden">
+      <div className="rounded-2xl border border-primary bg-card shadow-lg overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-muted/50">
             <tr className="text-left text-muted-foreground border-b border-primary">

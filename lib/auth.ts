@@ -4,6 +4,7 @@ import Credentials from "next-auth/providers/credentials";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import { FREE_CREDITS } from "@/constants/credits";
 
 export async function hashPassword(password: string) {
   const salt = await bcrypt.genSalt(10);
@@ -86,7 +87,7 @@ export const authOptions: AuthOptions = {
             data: {
               email: user.email,
               image: user.image ?? undefined,
-              credits: 10,
+              credits: FREE_CREDITS,
               totalRequests: 0,
               provider: "google",
               active: true,

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { PricingCard } from "./PricingCard";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";

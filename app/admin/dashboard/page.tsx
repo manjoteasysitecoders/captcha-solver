@@ -1,4 +1,38 @@
+"use client";
+
+import StatCard from "@/components/dashboard/StatCard";
+import { CreditCard, Users } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
+type Stats = {
+  usersCount: number;
+  plansCount: number;
+};
+
 export default function AdminDashboard() {
+  const [stats, setStats] = useState<Stats | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  async function fetchStats() {
+    try {
+      const res = await fetch("/api/admin/stats");
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || "Failed to load stats");
+
+      setStats(data);
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -13,23 +47,17 @@ export default function AdminDashboard() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div className="rounded-2xl border border-primary/50 bg-card p-5 shadow-lg">
-          <h2 className="text-sm font-medium text-muted-foreground">
-            Total Users
-          </h2>
-          <p className="mt-2 text-3xl font-extrabold text-primary">
-            —
-          </p>
-        </div>
+        <StatCard
+        icon={<Users className="w-6 h-6" />}
+          title="Total Users"
+          value={loading ? "…" : stats?.usersCount ?? 0}
+        />
 
-        <div className="rounded-2xl border border-primary/50 bg-card p-5 shadow-lg">
-          <h2 className="text-sm font-medium text-muted-foreground">
-            Total Plans
-          </h2>
-          <p className="mt-2 text-3xl font-extrabold text-primary">
-            —
-          </p>
-        </div>
+        <StatCard
+          icon={<CreditCard className="w-6 h-6" />}
+          title="Total Plans"
+          value={loading ? "…" : stats?.plansCount ?? 0}
+        />
       </div>
     </div>
   );

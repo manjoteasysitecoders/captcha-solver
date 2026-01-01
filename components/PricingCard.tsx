@@ -1,11 +1,11 @@
 "use client";
 
-import { pricingPlans } from "@/constants/pricing";
 import { motion } from "framer-motion";
 import BuyPlanButton from "./ui/BuyPlanButton";
 import { payWithRazorpay } from "@/lib/payment";
 import { toast } from "react-toastify";
 import { useUser } from "@/context/UserContext";
+import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 
 const cardVariants = {
@@ -13,7 +13,6 @@ const cardVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.45 } },
 };
 
-// Safe hook: returns context or null if none
 const useUserSafe = () => {
   try {
     return useUser();
@@ -23,83 +22,119 @@ const useUserSafe = () => {
 };
 
 export const PricingCard = () => {
+  const [plans, setPlans] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const userContext = useUserSafe();
   const isAuthenticated = !!userContext;
   const refreshUser = userContext?.refreshUser;
 
+  useEffect(() => {
+    async function fetchPlans() {
+      try {
+        const res = await fetch("/api/admin/plans");
+        if (!res.ok) throw new Error("Failed to fetch plans");
+        const data = await res.json();
+        setPlans(data);
+      } catch (err) {
+        console.error(err);
+        toast("Failed to load plans");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchPlans();
+  }, []);
+
+  if (loading) return <p>Loading plans...</p>;
+
   return (
     <div className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-      {pricingPlans.map((plan) => (
+      {plans.map((plan) => (
         <motion.div
           key={plan.id}
           variants={cardVariants}
-          whileHover={{ y: -6 }}
-          transition={{ type: "spring", stiffness: 260, damping: 20 }}
-          className={`relative flex h-full flex-col rounded-2xl border bg-card p-6 shadow-sm
-            ${plan.highlight ? "border-primary ring-1 ring-primary/30" : "border-primary/50"}`}
+          initial="hidden"
+          animate="visible"
+          whileHover={{ y: -10, scale: 1.015 }}
+          transition={{ type: "spring", stiffness: 180, damping: 18 }}
+          className="relative flex h-full flex-col rounded-3xl border border-primary/20 bg-linear-to-b from-background to-muted/30 shadow-md hover:shadow-xl overflow-hidden"
         >
-          {plan.highlight && (
-            <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
-              Most Popular
-            </span>
+          {plan.image && (
+            <div className="w-full h-40 overflow-hidden rounded-t-2xl">
+              <img
+                src={plan.image}
+                alt={plan.name}
+                className="w-full h-full object-cover object-center transition-transform duration-300 hover:scale-105"
+              />
+            </div>
           )}
 
-          <h3 className="text-xl font-semibold">{plan.name}</h3>
-          <p className="mt-2 text-sm">{plan.description}</p>
+          <div className="flex flex-col flex-1 p-6 text-left">
+            <h3 className="text-2xl font-bold">{plan.name}</h3>
 
-          <div className="mt-6 flex items-end gap-2">
-            <span className="text-3xl font-bold">{plan.price}</span>
-            <span className="text-sm">/{plan.credits} Credits</span>
-          </div>
+            <p className="mt-2 text-sm text-muted-foreground whitespace-pre-line">
+              {plan.description || "Best for growing teams"}
+            </p>
 
-          <div className="mt-4 text-sm">
-            ⚡ Average speed: <span className="font-medium">{plan.speed}</span>
-          </div>
+            {/* Price */}
+            <div className="mt-6 flex items-end justify-center gap-1">
+              <span className="text-4xl font-extrabold">₹{plan.price}</span>
+              <span className="text-sm text-muted-foreground">
+                / {plan.credits} credits
+              </span>
+            </div>
 
-          <ul className="mt-4 space-y-2 text-sm">
-            {plan.features.map((feature) => (
-              <li key={feature} className="flex items-center gap-2">
-                <span className="text-primary">✓</span>
-                {feature}
-              </li>
-            ))}
-          </ul>
+            {plan.validity && (
+              <div className="mt-2 text-xs text-muted-foreground text-center">
+                ⚡ Valid for {plan.validity} days
+              </div>
+            )}
 
-          <motion.div className="mt-auto" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
-            <BuyPlanButton
-              key={plan.id}
-              onAuthenticatedClick={isAuthenticated ? async () => {
-                try {
-                  await payWithRazorpay(Number(plan.price.replace("₹", "")));
-                  toast("Payment successful! Thank you for your purchase.");
+            {/* Divider */}
+            <div className="my-6 h-px w-full bg-border" />
 
-                  const res = await fetch("/api/user/plan", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ planId: plan.id }),
-                  });
-
-                  if (!res.ok) {
-                    const error = await res.json();
-                    toast(error.message || "Failed to update plan");
-                    return;
-                  }
-
-                  toast("Your plan and credits have been updated!");
-                  await refreshUser?.();
-                } catch (err) {
-                  console.error(err);
-                  toast("Payment failed. Please try again.");
-                }
-              } : undefined}
-              onUnauthenticatedClick={!isAuthenticated ? () => {
-                redirect("/signup");
-              } : undefined}
-              className="mt-4 inline-flex h-11 w-full items-center justify-center rounded-md px-5 text-sm font-semibold border border-primary text-primary hover:bg-primary hover:text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+            {/* CTA */}
+            <motion.div
+              className="mt-auto"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
             >
-              {isAuthenticated ? "Buy Plan" : "Login to Buy"}
-            </BuyPlanButton>
-          </motion.div>
+              <BuyPlanButton
+                onAuthenticatedClick={
+                  isAuthenticated
+                    ? async () => {
+                        try {
+                          await payWithRazorpay(Number(plan.price));
+                          toast("Payment successful!");
+                          const res = await fetch("/api/user/plan", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ planId: plan.id }),
+                          });
+
+                          if (!res.ok) {
+                            const error = await res.json();
+                            toast(error.message || "Failed to update plan");
+                            return;
+                          }
+
+                          toast("Your plan and credits have been updated!");
+                          await refreshUser?.();
+                        } catch {
+                          toast("Payment failed. Please try again.");
+                        }
+                      }
+                    : undefined
+                }
+                onUnauthenticatedClick={
+                  !isAuthenticated ? () => redirect("/signup") : undefined
+                }
+                className="inline-flex h-12 w-full items-center justify-center rounded-xl bg-primary text-background font-semibold hover:opacity-90 transition"
+              >
+                {isAuthenticated ? "Buy Plan" : "Login to Buy"}
+              </BuyPlanButton>
+            </motion.div>
+          </div>
         </motion.div>
       ))}
     </div>

@@ -19,11 +19,12 @@ export async function POST(req: Request) {
   if (!admin)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { name, price, credits, description } = await req.json();
+  const { name, price, credits, description, validity, image } =
+    await req.json();
 
   if (!name || price == null || credits == null) {
     return NextResponse.json(
-      { error: "Name, price and credits are required" },
+      { error: "Name, price, credits and description are required" },
       { status: 400 }
     );
   }
@@ -35,6 +36,8 @@ export async function POST(req: Request) {
         price,
         credits,
         description,
+        validity: validity ? Number(validity) : null,
+        image: image || null,
       },
     });
 

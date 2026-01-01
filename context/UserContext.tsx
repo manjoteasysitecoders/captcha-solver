@@ -13,7 +13,9 @@ interface Plan {
   name: string;
   price: number;
   credits: number;
-  description?: string;
+  validity?: number | null;
+  image?: string | null;
+  description: string;
 }
 
 interface User {
@@ -26,6 +28,7 @@ interface User {
   apiKeys: string;
   image?: string;
   provider: string;
+  createdAt: string;
 }
 
 interface UserContextType {

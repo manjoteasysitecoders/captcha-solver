@@ -8,7 +8,9 @@ type Plan = {
   name: string;
   price: number;
   credits: number;
-  description?: string | null;
+  validity?: number | null;
+  image?: string | null;
+  description: string;
 };
 
 export default function AdminPlansPage() {
@@ -19,6 +21,8 @@ export default function AdminPlansPage() {
     name: "",
     price: "",
     credits: "",
+    validity: "",
+    image: "",
     description: "",
   });
 
@@ -51,6 +55,8 @@ export default function AdminPlansPage() {
           price: Number(form.price),
           credits: Number(form.credits),
           description: form.description,
+          validity: form.validity ? Number(form.validity) : null,
+          image: form.image || null,
         }),
       });
 
@@ -58,7 +64,14 @@ export default function AdminPlansPage() {
       if (!res.ok) throw new Error(data.error || "Failed to create plan");
 
       toast.success("Plan created successfully");
-      setForm({ name: "", price: "", credits: "", description: "" });
+      setForm({
+        name: "",
+        price: "",
+        credits: "",
+        validity: "",
+        image: "",
+        description: "",
+      });
       fetchPlans();
     } catch (err: any) {
       toast.error(err.message);
@@ -88,6 +101,8 @@ export default function AdminPlansPage() {
           name: editPlan.name,
           price: editPlan.price,
           credits: editPlan.credits,
+          validity: editPlan.validity,
+          image: editPlan.image,
           description: editPlan.description,
         }),
       });
@@ -169,8 +184,22 @@ export default function AdminPlansPage() {
             value={form.credits}
             onChange={(e) => setForm({ ...form, credits: e.target.value })}
           />
+          <input
+            placeholder="Validity (days)"
+            type="number"
+            className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+            value={form.validity}
+            onChange={(e) => setForm({ ...form, validity: e.target.value })}
+          />
+          <input
+            placeholder="Image URL"
+            type="text"
+            className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+            value={form.image}
+            onChange={(e) => setForm({ ...form, image: e.target.value })}
+          />
           <textarea
-            placeholder="Description (optional)"
+            placeholder="Description"
             className="md:col-span-2 rounded-xl border border-primary/50 bg-background px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
@@ -183,7 +212,7 @@ export default function AdminPlansPage() {
         </div>
       </form>
 
-      <div className="rounded-2xl border border-primary bg-card shadow-lg overflow-hidden">
+      <div className="rounded-2xl border border-primary bg-card shadow-lg overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-muted/50">
             <tr className="text-left text-muted-foreground border-b border-primary">
@@ -198,11 +227,26 @@ export default function AdminPlansPage() {
             {plans.length ? (
               plans.map((plan) => (
                 <tr key={plan.id} className="border-t border-primary">
-                  <td className="p-4 font-medium">{plan.name}</td>
+                  <td className="p-4 font-medium flex items-center gap-2">
+                    {plan.image && (
+                      <img
+                        src={plan.image}
+                        alt={plan.name}
+                        className="w-10 h-10 rounded-md object-cover"
+                      />
+                    )}
+                    {plan.name}
+                  </td>
                   <td className="p-4">{plan.price}</td>
                   <td className="p-4">{plan.credits}</td>
                   <td className="p-4 text-muted-foreground">
                     {plan.description ?? "-"}
+                    {plan.validity && (
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Validity: {plan.validity} day
+                        {plan.validity > 1 ? "s" : ""}
+                      </p>
+                    )}
                   </td>
                   <td className="p-4 text-center space-x-2">
                     <button
@@ -281,6 +325,33 @@ export default function AdminPlansPage() {
                         className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
                       />
                     </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="font-medium">Validity (days)</label>
+                    <input
+                      type="number"
+                      value={editPlan.validity ?? ""}
+                      onChange={(e) =>
+                        setEditPlan({
+                          ...editPlan,
+                          validity: Number(e.target.value),
+                        })
+                      }
+                      className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="font-medium">Image URL</label>
+                    <input
+                      type="text"
+                      value={editPlan.image ?? ""}
+                      onChange={(e) =>
+                        setEditPlan({ ...editPlan, image: e.target.value })
+                      }
+                      className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
                   </div>
 
                   <div className="space-y-1">

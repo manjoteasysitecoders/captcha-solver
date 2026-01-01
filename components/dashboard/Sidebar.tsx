@@ -7,15 +7,36 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { dashboardSidebarLinks } from "@/constants/navLinks";
 import { useUser } from "@/context/UserContext";
+import { FREE_CREDITS } from "@/constants/credits";
 
 export default function Sidebar({ open }: { open: boolean }) {
   const pathname = usePathname();
   const { user } = useUser();
 
-  const planName = user?.currentPlan?.name ?? "Free";
-  const totalCredits = user?.currentPlan?.credits ?? 0;
+  const plan = user?.currentPlan;
+
+  const planName = plan?.name ?? "Free";
+  const freeCredits = FREE_CREDITS;
+  const planCredits = plan?.credits ?? 0;
+
+  const totalCredits = freeCredits + planCredits;
   const remainingCredits = user?.credits ?? 0;
+
   const usedCredits = Math.max(totalCredits - remainingCredits, 0);
+
+  let validity: number | null = null;
+
+  if (plan?.validity && user?.createdAt) {
+    const start = new Date(user.createdAt);
+    const end = new Date(start);
+    end.setDate(end.getDate() + plan.validity);
+
+    const diff = Math.ceil(
+      (end.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+    );
+
+    validity = Math.max(diff, 0);
+  }
 
   return (
     <aside
@@ -71,6 +92,8 @@ export default function Sidebar({ open }: { open: boolean }) {
           used={usedCredits}
           total={totalCredits}
           plan={planName}
+          image={user?.currentPlan?.image}
+          validity={validity}
         />
       )}
 
@@ -96,50 +119,61 @@ interface CreditsCardProps {
   used: number;
   total: number;
   plan: string;
+  image?: string | null;
+  validity?: number | null;
 }
 
-export function CreditsCard({ open, used, total, plan }: CreditsCardProps) {
-  const percentage = Math.min((used / total) * 100, 100);
+export function CreditsCard({
+  open,
+  used,
+  total,
+  plan,
+  image,
+  validity,
+}: CreditsCardProps) {
+  const percentage = total > 0 ? Math.min((used / total) * 100, 100) : 0;
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
+      transition={{ duration: 0.4 }}
       className={`
         mt-4 rounded-2xl border border-primary
-        bg-card text-card-foreground shadow-lg
+        bg-card shadow-lg
         ${open ? "p-4" : "p-3"}
       `}
     >
       {/* Header */}
-      <div
-        className={`flex items-center ${
-          open ? "justify-between" : "justify-center"
-        }`}
-      >
-        <div className="flex items-center gap-2 text-sm font-semibold">
-          <Zap className="h-4 w-4 text-primary" />
-          {open && <span>{plan} Plan</span>}
-        </div>
+      <div className="flex items-center gap-3">
+        {image ? (
+          <img
+            src={image}
+            alt={plan}
+            className="h-8 w-8 rounded-md object-cover"
+          />
+        ) : (
+          <Zap className="h-5 w-5 text-primary" />
+        )}
 
         {open && (
-          <span className="text-xs text-muted-foreground">
-            {total - used} left
-          </span>
+          <div className="flex flex-col">
+            <span className="text-sm font-semibold">{plan} Plan</span>
+            {validity !== null && (
+              <span className="text-xs text-muted-foreground">
+                {validity} days left
+              </span>
+            )}
+          </div>
         )}
       </div>
 
       {/* Progress */}
       <div className="mt-3 h-2 w-full rounded-full bg-muted overflow-hidden">
         <motion.div
-          className="h-full rounded-full bg-primary"
-          initial={{ width: 0 }}
+          className="h-full bg-primary rounded-full"
           animate={{ width: `${percentage}%` }}
-          transition={{
-            duration: 1.2,
-            ease: [0.22, 1, 0.36, 1],
-          }}
+          transition={{ duration: 1 }}
         />
       </div>
 
