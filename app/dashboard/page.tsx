@@ -6,7 +6,6 @@ import { Zap, Package, BadgeInfo } from "lucide-react";
 import StatCard from "@/components/dashboard/StatCard";
 import { PricingCard } from "@/components/PricingCard";
 import { useUser } from "@/context/UserContext";
-import { redirect } from "next/navigation";
 
 export default function DashboardPage() {
   const { user } = useUser();
@@ -76,7 +75,7 @@ export default function DashboardPage() {
                 {/* Right */}
                 <div className="flex flex-col gap-3">
                   <button
-                    onClick={() => redirect("/dashboard/billing")}
+                    onClick={() => setShowPricing(true)}
                     className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-4 text-base font-semibold text-background transition hover:opacity-90"
                   >
                     <Zap className="w-5 h-5" />
@@ -99,7 +98,6 @@ export default function DashboardPage() {
                     Hide pricing
                   </button>
                 </div>
-
                 <PricingCard />
               </div>
             )}
