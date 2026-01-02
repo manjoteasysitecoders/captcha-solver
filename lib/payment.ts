@@ -1,4 +1,4 @@
-export const payWithRazorpay = async (amount: number) => {
+export const payWithRazorpay = async (planId: string): Promise<boolean> => {
   if (!(window as any).Razorpay) {
     await new Promise((resolve, reject) => {
       const script = document.createElement("script");
@@ -12,7 +12,7 @@ export const payWithRazorpay = async (amount: number) => {
   const orderResponse = await fetch("/api/payment/create-order", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ amount }),
+    body: JSON.stringify({ planId }),
   });
 
   if (!orderResponse.ok) {
@@ -34,6 +34,11 @@ export const payWithRazorpay = async (amount: number) => {
       name: "Captcha Solver",
       description: "Buy Credits",
       order_id: order.id,
+      modal: {
+        ondismiss: async () => {
+          reject(new Error("Payment cancelled"));
+        },
+      },
       handler: async (response: any) => {
         try {
           const verifyRes = await fetch("/api/payment/verify", {
@@ -45,9 +50,9 @@ export const payWithRazorpay = async (amount: number) => {
           const verifyData = await verifyRes.json();
 
           if (verifyData.status === "success") {
-            resolve(verifyData);
+            resolve(true);
           } else {
-            reject(new Error("Payment Verification Failed"));
+            reject(new Error("Payment verification failed"));
           }
         } catch (err) {
           reject(err);

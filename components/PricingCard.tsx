@@ -37,7 +37,7 @@ export const PricingCard = () => {
         setPlans(data);
       } catch (err) {
         console.error(err);
-        toast("Failed to load plans");
+        toast.error("Failed to load plans");
       } finally {
         setLoading(false);
       }
@@ -46,6 +46,19 @@ export const PricingCard = () => {
   }, []);
 
   if (loading) return <p>Loading plans...</p>;
+
+  const handlePayment = async (planId: string) => {
+    try {
+      const success = await payWithRazorpay(planId);
+
+      if (success) {
+        toast.success("Payment successful!");
+        await refreshUser?.();
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Payment failed");
+    }
+  };
 
   return (
     <div className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -76,7 +89,6 @@ export const PricingCard = () => {
               {plan.description || "Best for growing teams"}
             </p>
 
-            {/* Price */}
             <div className="mt-6 flex items-end justify-center gap-1">
               <span className="text-4xl font-extrabold">₹{plan.price}</span>
               <span className="text-sm text-muted-foreground">
@@ -90,10 +102,8 @@ export const PricingCard = () => {
               </div>
             )}
 
-            {/* Divider */}
             <div className="my-6 h-px w-full bg-border" />
 
-            {/* CTA */}
             <motion.div
               className="mt-auto"
               whileHover={{ scale: 1.04 }}
@@ -102,28 +112,7 @@ export const PricingCard = () => {
               <BuyPlanButton
                 onAuthenticatedClick={
                   isAuthenticated
-                    ? async () => {
-                        try {
-                          await payWithRazorpay(Number(plan.price));
-                          toast("Payment successful!");
-                          const res = await fetch("/api/user/plan", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ planId: plan.id }),
-                          });
-
-                          if (!res.ok) {
-                            const error = await res.json();
-                            toast(error.message || "Failed to update plan");
-                            return;
-                          }
-
-                          toast("Your plan and credits have been updated!");
-                          await refreshUser?.();
-                        } catch (err: any) {
-                          toast.error(err.message);
-                        }
-                      }
+                    ? () => handlePayment(plan.id)
                     : undefined
                 }
                 onUnauthenticatedClick={

@@ -16,29 +16,31 @@ model Admin {
 }
 
 model User {
-  id            String   @id @default(uuid())
-  email         String   @unique
-  createdAt     DateTime @default(now())
+  id            String    @id @default(uuid())
+  email         String    @unique
+  createdAt     DateTime  @default(now())
   password      String?
-  credits       Int      @default(0)
+  credits       Int       @default(0)
   currentPlanId String?
-  totalRequests Int      @default(0)
+  totalRequests Int       @default(0)
   image         String?
   provider      String?
-  active        Boolean  @default(true)
+  active        Boolean   @default(true)
   apiKeys       ApiKey[]
-  currentPlan   Plan?    @relation(fields: [currentPlanId], references: [id])
+  currentPlan   Plan?     @relation(fields: [currentPlanId], references: [id])
+  payments      Payment[]
 }
 
 model Plan {
-  id          String  @id @default(cuid())
-  name        String  @unique
+  id          String    @id @default(cuid())
+  name        String    @unique
   price       Int
   credits     Int
   description String
   image       String?
   validity    Int?
   users       User[]
+  payments    Payment[]
 }
 
 model ApiKey {
@@ -48,4 +50,25 @@ model ApiKey {
   createdAt  DateTime  @default(now())
   lastUsedAt DateTime?
   user       User      @relation(fields: [userId], references: [id])
+}
+
+model Payment {
+  id                String        @id @default(cuid())
+  userId            String
+  planId            String
+  amount            Int
+  razorpayOrderId   String        @unique
+  razorpayPaymentId String?       @unique
+  status            PaymentStatus @default(PENDING)
+  createdAt         DateTime      @default(now())
+  verifiedAt        DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+  plan Plan @relation(fields: [planId], references: [id])
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
 }

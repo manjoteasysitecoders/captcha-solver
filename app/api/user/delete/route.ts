@@ -14,6 +14,10 @@ export async function DELETE() {
   }
 
   try {
+    await prisma.payment.deleteMany({
+      where: { userId: user.id },
+    });
+
     await prisma.apiKey.deleteMany({
       where: { userId: user.id },
     });

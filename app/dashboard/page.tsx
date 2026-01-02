@@ -48,8 +48,8 @@ export default function DashboardPage() {
         />
       </section>
 
-      {isFreePlan ||
-        (user.credits < 10 && (
+      {(isFreePlan ||
+        user.credits < 10) && (
           <section className="relative rounded-3xl border border-primary/50 bg-background p-8 shadow-sm">
             {!showPricing ? (
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
@@ -102,7 +102,7 @@ export default function DashboardPage() {
               </div>
             )}
           </section>
-        ))}
+        )}
     </div>
   );
 }
