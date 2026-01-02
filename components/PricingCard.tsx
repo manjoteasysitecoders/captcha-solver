@@ -58,7 +58,7 @@ export const PricingCard = () => {
           className="relative flex h-full flex-col rounded-3xl border border-primary bg-linear-to-b from-background to-muted/30 shadow-md hover:shadow-xl overflow-hidden"
         >
           {plan.image && (
-            <div className="w-full h-40 overflow-hidden rounded-t-2xl">
+            <div className="w-full h-full overflow-hidden rounded-t-2xl">
               <img
                 src={plan.image}
                 alt={plan.name}

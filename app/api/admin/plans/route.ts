@@ -22,7 +22,7 @@ export async function POST(req: Request) {
   const { name, price, credits, description, validity, image } =
     await req.json();
 
-  if (!name || price == null || credits == null) {
+  if (!name || price == null || credits == null || description == null) {
     return NextResponse.json(
       { error: "Name, price, credits and description are required" },
       { status: 400 }
