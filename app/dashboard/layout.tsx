@@ -1,5 +1,5 @@
 import DashboardUI from "./DashboardUI";
-import { getAuthUser } from "@/lib/auth";
+import { requireAuthUser } from "@/lib/require-auth-user";
 import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({
@@ -7,13 +7,13 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getAuthUser();
+  const user = await requireAuthUser();
 
   if (!user) {
     redirect("/signin");
   }
 
-  if (user.active === false) {
+  if (!user.active) {
     redirect("/blocked");
   }
 

@@ -31,7 +31,7 @@ export const PricingCard = () => {
   useEffect(() => {
     async function fetchPlans() {
       try {
-        const res = await fetch("/api/admin/plans");
+        const res = await fetch("/api/plans");
         if (!res.ok) throw new Error("Failed to fetch plans");
         const data = await res.json();
         setPlans(data);
@@ -57,7 +57,7 @@ export const PricingCard = () => {
           animate="visible"
           whileHover={{ y: -10, scale: 1.015 }}
           transition={{ type: "spring", stiffness: 180, damping: 18 }}
-          className="relative flex h-full flex-col rounded-3xl border border-primary/20 bg-linear-to-b from-background to-muted/30 shadow-md hover:shadow-xl overflow-hidden"
+          className="relative flex h-full flex-col rounded-3xl border border-primary bg-linear-to-b from-background to-muted/30 shadow-md hover:shadow-xl overflow-hidden"
         >
           {plan.image && (
             <div className="w-full h-40 overflow-hidden rounded-t-2xl">
@@ -120,8 +120,8 @@ export const PricingCard = () => {
 
                           toast("Your plan and credits have been updated!");
                           await refreshUser?.();
-                        } catch {
-                          toast("Payment failed. Please try again.");
+                        } catch (err: any) {
+                          toast.error(err.message);
                         }
                       }
                     : undefined

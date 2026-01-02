@@ -9,6 +9,8 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  if (!user.active) return NextResponse.json({ error: "Your account has been blocked." }, { status: 403 });
+
   const fullUser = await prisma.user.findUnique({
     where: { id: user.id },
     select: {
@@ -25,6 +27,8 @@ export async function GET() {
           name: true,
           price: true,
           credits: true,
+          image: true,
+          validity: true,
           description: true,
         },
       },

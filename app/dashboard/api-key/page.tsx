@@ -26,7 +26,6 @@ export default function ApiKeyPage() {
         if (!res.ok) {
           const err = await res.json().catch(() => ({ error: "Unknown" }));
           if (res.status === 403) {
-            toast(err.error || "Your account has been blocked. Please contact support.");
             window.location.href = "/blocked";
           }
 
@@ -61,7 +60,6 @@ export default function ApiKeyPage() {
       if (!res.ok) {
         const error = await res.json().catch(() => ({ error: "Unknown" }));
         if (res.status === 403) {
-          toast(error.error || "Your account has been blocked. Please contact support.");
           window.location.href = "/blocked";
           return;
         }

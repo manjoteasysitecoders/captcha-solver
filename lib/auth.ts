@@ -32,21 +32,21 @@ export const authOptions: AuthOptions = {
 
       async authorize(credentials) {
         if (!credentials?.email || !credentials.password) {
-          return null;
+          throw new Error("Invalid email or password");
         }
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
 
-        if (!user) return null;
+        if (!user) throw new Error("Invalid email or password");
 
         if (!user.active) {
           throw new Error("Account is blocked");
         }
 
         if (!user.password) {
-          return null;
+          throw new Error("Invalid password");
         }
 
         const isValid = await verifyPassword(
@@ -54,7 +54,7 @@ export const authOptions: AuthOptions = {
           user.password
         );
 
-        if (!isValid) return null;
+        if (!isValid) throw new Error("Invalid password");
 
         return {
           id: user.id,

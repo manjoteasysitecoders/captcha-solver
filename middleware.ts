@@ -1,3 +1,4 @@
+import { user } from "@elevenlabs/elevenlabs-js/api";
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
@@ -25,7 +26,12 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/signin", req.url));
   }
 
-  if (userToken && pathname === "/signin") {
+  if (
+    userToken && 
+    !pathname.startsWith("/dashboard") &&
+    !pathname.startsWith("/admin") &&
+    pathname !== "/blocked"
+  ) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 

@@ -30,13 +30,14 @@ export default function PlaygroundPage() {
       let res: Response;
 
       if (type === "image") {
+        const form = new FormData();
+        if (file) form.append("file", file);
+        if (value) form.append("url", value);
+
         res = await fetch("/api/public/imageCaptcha", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": apiKey,
-          },
-          body: JSON.stringify({ imageUrl: value }),
+          headers: { "x-api-key": apiKey },
+          body: form,
         });
       }
 
@@ -145,16 +146,27 @@ export default function PlaygroundPage() {
         {/* Input Section */}
         <div className="rounded-3xl p-4 border border-primary bg-card shadow-md space-y-4 transition hover:shadow-lg">
           {type !== "text" && (
-            <input
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              placeholder={
-                type === "image"
-                  ? "Enter image URL"
-                  : "Enter audio URL (optional)"
-              }
-              className="w-full px-4 py-3 rounded-2xl border border-primary focus:ring-2 focus:ring-primary focus:outline-none transition"
-            />
+            <>
+              <input
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+                placeholder={
+                  type === "image"
+                    ? "Enter image URL (optional if uploading file)"
+                    : "Enter audio URL (optional)"
+                }
+                className="w-full px-4 py-3 rounded-2xl border border-primary focus:ring-2 focus:ring-primary focus:outline-none transition"
+              />
+
+              {type === "image" && (
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setFile(e.target.files?.[0] || null)}
+                  className="block w-full text-sm text-primary file:rounded-full file:p-2 file:border-0 file:bg-primary/20 file:text-primary hover:file:bg-primary/30 transition"
+                />
+              )}
+            </>
           )}
 
           {type === "text" && (

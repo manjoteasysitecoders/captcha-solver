@@ -15,6 +15,15 @@ export const payWithRazorpay = async (amount: number) => {
     body: JSON.stringify({ amount }),
   });
 
+  if (!orderResponse.ok) {
+    const err = await orderResponse.json();
+    if (orderResponse.status === 403) {
+      throw new Error("Your account is blocked. Contact our team.");
+    } else {
+      throw new Error(err.error || "Payment failed. Please try again.");
+    }
+  }
+
   const order = await orderResponse.json();
 
   return new Promise((resolve, reject) => {
@@ -37,7 +46,6 @@ export const payWithRazorpay = async (amount: number) => {
 
           if (verifyData.status === "success") {
             resolve(verifyData);
-            
           } else {
             reject(new Error("Payment Verification Failed"));
           }

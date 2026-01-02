@@ -13,17 +13,19 @@ export async function GET() {
 
   if (!dbUser) return NextResponse.json([], { status: 404 });
 
+  if (!dbUser.active) return NextResponse.json([], { status: 403 });
+
   const keys = await prisma.apiKey.findMany({
     where: { userId: dbUser.id },
     select: {
       id: true,
-      key: true,         
+      key: true,
       createdAt: true,
       lastUsedAt: true,
     },
   });
 
-  const decryptedKeys = keys.map(k => ({
+  const decryptedKeys = keys.map((k) => ({
     id: k.id,
     key: decryptApiKey(k.key),
     createdAt: k.createdAt,
@@ -42,7 +44,18 @@ export async function POST() {
     where: { email: user.email },
   });
 
-  if (!dbUser || dbUser.credits <= 0) {
+  if (!dbUser) {
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
+  }
+
+  if (!dbUser.active) {
+    return NextResponse.json(
+      { error: "Your account is blocked." },
+      { status: 403 }
+    );
+  }
+
+  if (dbUser.credits <= 0) {
     return NextResponse.json(
       { error: "You do not have enough credits to generate an API key." },
       { status: 403 }
@@ -59,12 +72,12 @@ export async function POST() {
   await prisma.apiKey.create({
     data: {
       userId: dbUser.id,
-      key: encryptedKey, 
+      key: encryptedKey,
     },
   });
 
   return NextResponse.json({
-    key: plainKey, 
+    key: plainKey,
     createdAt: new Date(),
   });
 }
