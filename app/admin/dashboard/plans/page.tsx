@@ -239,8 +239,11 @@ export default function AdminPlansPage() {
                   </td>
                   <td className="p-4">{plan.price}</td>
                   <td className="p-4">{plan.credits}</td>
-                  <td className="p-4 text-muted-foreground">
-                    {plan.description ?? "-"}
+                  <td className="p-4 text-muted-foreground max-w-xs">
+                    <p className="truncate" title={plan.description}>
+                      {plan.description ?? "-"}
+                    </p>
+
                     {plan.validity && (
                       <p className="text-xs text-muted-foreground mt-1">
                         Validity: {plan.validity} day

@@ -72,7 +72,7 @@ export const PricingCard = () => {
           <div className="flex flex-col flex-1 p-6 text-left">
             <h3 className="text-2xl font-bold">{plan.name}</h3>
 
-            <p className="mt-2 text-sm text-muted-foreground whitespace-pre-line">
+            <p className="mt-2 text-md text-muted-foreground whitespace-pre-line">
               {plan.description || "Best for growing teams"}
             </p>
 
