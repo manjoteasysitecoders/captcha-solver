@@ -200,7 +200,7 @@ export default function AdminPlansPage() {
           />
           <textarea
             placeholder="Description"
-            className="md:col-span-2 rounded-xl border border-primary/50 bg-background px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+            className="md:col-span-2 rounded-xl border border-primary/50 bg-background px-3 py-2 h-32 focus:outline-none focus:ring-2 focus:ring-primary"
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
           />
@@ -283,7 +283,7 @@ export default function AdminPlansPage() {
 
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-card rounded-2xl border-2 border-primary p-6 w-full max-w-lg shadow-lg space-y-4">
+          <div className="bg-card rounded-2xl border-2 border-primary p-6 w-full max-w-lg shadow-lg space-y-4 max-h-[90vh] overflow-y-auto">
             {editPlan ? (
               <>
                 <h2 className="text-lg font-semibold mb-4">Edit Plan</h2>
@@ -367,7 +367,7 @@ export default function AdminPlansPage() {
                           description: e.target.value,
                         })
                       }
-                      className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2 h-32 focus:outline-none focus:ring-2 focus:ring-primary"
                     />
                   </div>
 

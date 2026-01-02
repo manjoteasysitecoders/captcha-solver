@@ -34,6 +34,9 @@ export default function DashboardUI({
           <main className="flex-1 px-12 pt-6 pb-10 space-y-10 overflow-auto">
             {children}
           </main>
+          <footer className="text-gray-700 py-4 px-12 text-center border-t border-border">
+            &copy; {new Date().getFullYear()} CAPTCHA Solver. All rights reserved.
+          </footer>
         </div>
       </div>
     </UserProvider>

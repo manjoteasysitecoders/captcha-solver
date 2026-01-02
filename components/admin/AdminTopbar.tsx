@@ -13,7 +13,7 @@ export default function AdminTopbar({
       className="
         h-20 px-4
         flex items-center
-      bg-white
+      bg-white/50
         backdrop-blur-xl
         border-b border-border/50
       "
