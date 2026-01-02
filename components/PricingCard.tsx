@@ -2,11 +2,10 @@
 
 import { motion } from "framer-motion";
 import BuyPlanButton from "./ui/BuyPlanButton";
-import { payWithRazorpay } from "@/lib/payment";
 import { toast } from "react-toastify";
 import { useUser } from "@/context/UserContext";
 import { useEffect, useState } from "react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 24 },
@@ -26,8 +25,7 @@ export const PricingCard = () => {
   const [loading, setLoading] = useState(true);
   const userContext = useUserSafe();
   const isAuthenticated = !!userContext;
-  const refreshUser = userContext?.refreshUser;
-
+  const router = useRouter();
   useEffect(() => {
     async function fetchPlans() {
       try {
@@ -46,19 +44,6 @@ export const PricingCard = () => {
   }, []);
 
   if (loading) return <p>Loading plans...</p>;
-
-  const handlePayment = async (planId: string) => {
-    try {
-      const success = await payWithRazorpay(planId);
-
-      if (success) {
-        toast.success("Payment successful!");
-        await refreshUser?.();
-      }
-    } catch (err: any) {
-      toast.error(err.message || "Payment failed");
-    }
-  };
 
   return (
     <div className="mt-14 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -110,14 +95,10 @@ export const PricingCard = () => {
               whileTap={{ scale: 0.96 }}
             >
               <BuyPlanButton
-                onAuthenticatedClick={
-                  isAuthenticated
-                    ? () => handlePayment(plan.id)
-                    : undefined
+                onAuthenticatedClick={() =>
+                  router.push(`/dashboard/billing?planId=${plan.id}`)
                 }
-                onUnauthenticatedClick={
-                  !isAuthenticated ? () => redirect("/signup") : undefined
-                }
+                onUnauthenticatedClick={() => router.push("/signup")}
                 className="inline-flex h-12 w-full items-center justify-center rounded-xl bg-primary text-background font-semibold hover:opacity-90 transition"
               >
                 {isAuthenticated ? "Buy Plan" : "Login to Buy"}

@@ -25,7 +25,7 @@ export const navLinks = [
 
 export const dashboardSidebarLinks = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
-  { href: "/dashboard/billing", label: "Billing", icon: CreditCard },
+  { href: "/dashboard/plans", label: "Purchase a Plan", icon: CreditCard },
   { href: "/dashboard/api-key", label: "Generate API Key", icon: KeyRound },
   { href: "/docs", label: "View Documentation", icon: Dock },
   { href: "/dashboard/playground", label: "Solve CAPTCHA", icon: RotateCcw }

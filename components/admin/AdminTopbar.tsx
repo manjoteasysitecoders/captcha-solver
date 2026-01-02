@@ -14,7 +14,6 @@ export default function AdminTopbar({
         h-20 px-4
         flex items-center
       bg-white/50
-        backdrop-blur-xl
         border-b border-border/50
       "
     >
