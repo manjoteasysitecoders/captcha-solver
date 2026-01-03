@@ -1,5 +1,6 @@
 "use client";
 
+import Modal from "@/components/admin/Modal";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -176,7 +177,7 @@ export default function AdminPlansPage() {
             type="file"
             accept="image/*"
             onChange={async (e) => {
-                    if (e.target.files?.[0]) {
+              if (e.target.files?.[0]) {
                 const base64 = await fileToBase64(e.target.files[0]);
                 setForm({ ...form, image: base64 });
               }
@@ -259,114 +260,95 @@ export default function AdminPlansPage() {
         </table>
       </div>
 
-      {/* Edit Modal */}
-      {modalOpen && editPlan && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-card rounded-2xl border-2 border-primary p-6 w-full max-w-lg shadow-lg space-y-4 max-h-[90vh] overflow-y-auto">
-            <h2 className="text-lg font-semibold mb-4">Edit Plan</h2>
-            <form onSubmit={updatePlan} className="space-y-4">
-              <div className="space-y-1">
-                <label className="font-medium">Name</label>
-                <input
-                  value={editPlan.name}
-                  onChange={(e) =>
-                    setEditPlan({ ...editPlan, name: e.target.value })
-                  }
-                  className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="font-medium">Price</label>
-                  <input
-                    type="number"
-                    value={editPlan.price}
-                    onChange={(e) =>
-                      setEditPlan({
-                        ...editPlan,
-                        price: Number(e.target.value),
-                      })
-                    }
-                    className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="font-medium">Credits</label>
-                  <input
-                    type="number"
-                    value={editPlan.credits}
-                    onChange={(e) =>
-                      setEditPlan({
-                        ...editPlan,
-                        credits: Number(e.target.value),
-                      })
-                    }
-                    className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-                  />
-                </div>
-              </div>
-              <div className="space-y-1">
-                <label className="font-medium">Validity (days)</label>
-                <input
-                  type="number"
-                  value={editPlan.validity ?? ""}
-                  onChange={(e) =>
-                    setEditPlan({
-                      ...editPlan,
-                      validity: Number(e.target.value),
-                    })
-                  }
-                  className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-              </div>
-              <div className="space-y-1">
-                <label className="font-medium">Image</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={async (e) => {
-                    if (e.target.files?.[0]) {
-                      const base64 = await fileToBase64(e.target.files[0]);
-                      setEditPlan({ ...editPlan!, image: base64 });
-                    }
-                  }}
-                  className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-              </div>
+      <Modal
+        open={modalOpen && !!editPlan}
+        title="Edit Plan"
+        loading={modalLoading}
+        onClose={() => {
+          setEditPlan(null);
+          setModalOpen(false);
+        }}
+        onSubmit={updatePlan}
+        submitLabel="Update"
+      >
+        <div className="space-y-1">
+          <label className="font-medium">Name</label>
+          <input
+            value={editPlan?.name ?? ""}
+            onChange={(e) =>
+              setEditPlan({ ...editPlan!, name: e.target.value })
+            }
+            className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2"
+          />
+        </div>
 
-              <div className="space-y-1">
-                <label className="font-medium">Description</label>
-                <textarea
-                  value={editPlan.description ?? ""}
-                  onChange={(e) =>
-                    setEditPlan({ ...editPlan, description: e.target.value })
-                  }
-                  className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2 h-32 focus:outline-none focus:ring-2 focus:ring-primary"
-                />
-              </div>
-              <div className="flex justify-end space-x-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEditPlan(null);
-                    setModalOpen(false);
-                  }}
-                  className="rounded-xl bg-foreground/10 px-4 py-2 hover:opacity-90"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={modalLoading}
-                  className="rounded-xl bg-primary px-4 py-2 font-medium text-primary-foreground hover:opacity-90"
-                >
-                  {modalLoading ? "Updating..." : "Update"}
-                </button>
-              </div>
-            </form>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-1">
+            <label className="font-medium">Price</label>
+            <input
+              type="number"
+              value={editPlan?.price ?? 0}
+              onChange={(e) =>
+                setEditPlan({ ...editPlan!, price: Number(e.target.value) })
+              }
+              className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2"
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="font-medium">Credits</label>
+            <input
+              type="number"
+              value={editPlan?.credits ?? 0}
+              onChange={(e) =>
+                setEditPlan({ ...editPlan!, credits: Number(e.target.value) })
+              }
+              className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2"
+            />
           </div>
         </div>
-      )}
+
+        <div className="space-y-1">
+          <label className="font-medium">Validity (days)</label>
+          <input
+            type="number"
+            value={editPlan?.validity ?? ""}
+            onChange={(e) =>
+              setEditPlan({
+                ...editPlan!,
+                validity: Number(e.target.value),
+              })
+            }
+            className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2"
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label className="font-medium">Image</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={async (e) => {
+              if (e.target.files?.[0]) {
+                const base64 = await fileToBase64(e.target.files[0]);
+                setEditPlan({ ...editPlan!, image: base64 });
+              }
+            }}
+            className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label className="font-medium">Description</label>
+          <textarea
+            value={editPlan?.description ?? ""}
+            onChange={(e) =>
+              setEditPlan({ ...editPlan!, description: e.target.value })
+            }
+            className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2 h-32"
+          />
+        </div>
+      </Modal>
     </div>
   );
 }

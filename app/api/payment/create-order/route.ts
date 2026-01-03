@@ -2,7 +2,7 @@ import razorpay from "@/lib/razorpay";
 import prisma from "@/lib/prisma";
 import { requireAuthUser } from "@/lib/require-auth-user";
 import { NextRequest, NextResponse } from "next/server";
-import { GST_RATE } from "@/constants/credits";
+import { calculatePrice } from "@/lib/pricing";
 
 export async function POST(req: NextRequest) {
   const user = await requireAuthUser();
@@ -11,18 +11,56 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { planId } = await req.json();
+    const { planId, couponId } = await req.json();
 
-    const plan = await prisma.plan.findUnique({
-      where: { id: planId },
-    });
-
+    const plan = await prisma.plan.findUnique({ where: { id: planId } });
     if (!plan) {
       return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
     }
 
-    const gstAmount = Math.round(plan.price * GST_RATE);
-    const totalAmount = plan.price + gstAmount;
+    let appliedCoupon: { id: string; percentage: number } | null = null;
+
+    if (couponId) {
+      const coupon = await prisma.coupon.findUnique({
+        where: { id: couponId },
+      });
+
+      if (!coupon || !coupon.isActive) {
+        return NextResponse.json(
+          { error: "Invalid or inactive coupon" },
+          { status: 400 }
+        );
+      }
+
+      if (coupon.usedCount >= coupon.maxUsers) {
+        return NextResponse.json(
+          { error: "Coupon max usage reached" },
+          { status: 400 }
+        );
+      }
+
+      const usageCount = await prisma.payment.count({
+        where: {
+          userId: user.id,
+          couponId: coupon.id,
+          status: "SUCCESS",
+        },
+      });
+
+      if (usageCount >= coupon.usagePerUser) {
+        return NextResponse.json(
+          { error: "You have already used this coupon" },
+          { status: 400 }
+        );
+      }
+
+      appliedCoupon = coupon;
+    }
+
+    const { discountedPrice, gstAmount, totalAmount } = calculatePrice(
+      plan.price,
+      appliedCoupon ?? undefined
+    );
 
     const order = await razorpay.orders.create({
       amount: totalAmount * 100, // paise
@@ -34,6 +72,7 @@ export async function POST(req: NextRequest) {
       data: {
         userId: user.id,
         planId: plan.id,
+        couponId: appliedCoupon?.id,
         amount: totalAmount,
         razorpayOrderId: order.id,
         status: "PENDING",
@@ -44,6 +83,7 @@ export async function POST(req: NextRequest) {
       ...order,
       totalAmount,
       gstAmount,
+      discountedPrice,
     });
   } catch (err) {
     console.error("RAZORPAY ORDER ERROR:", err);

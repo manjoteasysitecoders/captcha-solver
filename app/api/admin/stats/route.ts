@@ -7,13 +7,15 @@ export async function GET() {
   if (!admin)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const [usersCount, plansCount] = await Promise.all([
+  const [usersCount, plansCount, couponsCount] = await Promise.all([
     prisma.user.count(),
     prisma.plan.count(),
+    prisma.coupon.count(),
   ]);
 
   return NextResponse.json({
     usersCount,
     plansCount,
+    couponsCount,
   });
 }

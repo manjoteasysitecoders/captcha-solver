@@ -1,4 +1,4 @@
-export const payWithRazorpay = async (planId: string): Promise<boolean> => {
+export const payWithRazorpay = async (planId: string, couponId?: string): Promise<boolean> => {
   if (!(window as any).Razorpay) {
     await new Promise((resolve, reject) => {
       const script = document.createElement("script");
@@ -12,16 +12,12 @@ export const payWithRazorpay = async (planId: string): Promise<boolean> => {
   const orderResponse = await fetch("/api/payment/create-order", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ planId }),
+    body: JSON.stringify({ planId, couponId }),
   });
 
   if (!orderResponse.ok) {
     const err = await orderResponse.json();
-    if (orderResponse.status === 403) {
-      throw new Error("Your account is blocked. Contact our team.");
-    } else {
-      throw new Error(err.error || "Payment failed. Please try again.");
-    }
+    throw new Error(err.error || "Payment failed");
   }
 
   const order = await orderResponse.json();
@@ -34,11 +30,7 @@ export const payWithRazorpay = async (planId: string): Promise<boolean> => {
       name: "Captcha Solver",
       description: "Buy Credits",
       order_id: order.id,
-      modal: {
-        ondismiss: async () => {
-          reject(new Error("Payment cancelled"));
-        },
-      },
+      modal: { ondismiss: () => reject(new Error("Payment cancelled")) },
       handler: async (response: any) => {
         try {
           const verifyRes = await fetch("/api/payment/verify", {
@@ -46,14 +38,9 @@ export const payWithRazorpay = async (planId: string): Promise<boolean> => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(response),
           });
-
           const verifyData = await verifyRes.json();
-
-          if (verifyData.status === "success") {
-            resolve(true);
-          } else {
-            reject(new Error("Payment verification failed"));
-          }
+          if (verifyData.status === "success") resolve(true);
+          else reject(new Error("Payment verification failed"));
         } catch (err) {
           reject(err);
         }

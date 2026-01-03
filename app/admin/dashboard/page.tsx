@@ -1,13 +1,14 @@
 "use client";
 
 import StatCard from "@/components/dashboard/StatCard";
-import { CreditCard, Users } from "lucide-react";
+import { CreditCard, Percent, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 type Stats = {
   usersCount: number;
   plansCount: number;
+  couponsCount: number;
 };
 
 export default function AdminDashboard() {
@@ -57,6 +58,12 @@ export default function AdminDashboard() {
           icon={<CreditCard className="w-6 h-6" />}
           title="Total Plans"
           value={loading ? "…" : stats?.plansCount ?? 0}
+        />
+
+        <StatCard
+          icon={<Percent className="w-6 h-6" />}
+          title="Total Coupons"
+          value={loading ? "…" : stats?.couponsCount ?? 0}
         />
       </div>
     </div>
