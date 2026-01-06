@@ -146,26 +146,37 @@ export default function AdminPlansPage() {
       >
         <h2 className="text-lg font-semibold">Create New Plan</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-1">
+          <label className="font-medium">Name*</label>
           <input
-            placeholder="Plan name"
+            placeholder="Enter plan name"
             className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
           />
+          </div>
+          <div className="space-y-1">
+          <label className="font-medium">Price*</label>
           <input
-            placeholder="Price"
+            placeholder="Enter price"
             type="number"
             className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
             value={form.price}
             onChange={(e) => setForm({ ...form, price: e.target.value })}
           />
+          </div>
+          <div className="space-y-1">
+          <label className="font-medium">Credits*</label>
           <input
-            placeholder="Credits"
+            placeholder="Total credits"
             type="number"
             className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
             value={form.credits}
             onChange={(e) => setForm({ ...form, credits: e.target.value })}
           />
+          </div>
+          <div className="space-y-1">
+          <label className="font-medium">Validity</label>
           <input
             placeholder="Validity (days)"
             type="number"
@@ -173,17 +184,21 @@ export default function AdminPlansPage() {
             value={form.validity}
             onChange={(e) => setForm({ ...form, validity: e.target.value })}
           />
-          <input
-            type="file"
-            accept="image/*"
-            onChange={async (e) => {
-              if (e.target.files?.[0]) {
-                const base64 = await fileToBase64(e.target.files[0]);
-                setForm({ ...form, image: base64 });
-              }
-            }}
-            className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
-          />
+          </div>
+          <div className="space-y-1">
+            <label className="font-medium">Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={async (e) => {
+                if (e.target.files?.[0]) {
+                  const base64 = await fileToBase64(e.target.files[0]);
+                  setForm({ ...form, image: base64 });
+                }
+              }}
+              className="w-full rounded-xl border border-primary/50 bg-background px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+          </div>
           <textarea
             placeholder="Description"
             className="md:col-span-2 rounded-xl border border-primary/50 bg-background px-3 py-2 h-32 focus:outline-none focus:ring-2 focus:ring-primary"

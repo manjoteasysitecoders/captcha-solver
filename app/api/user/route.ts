@@ -9,7 +9,11 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  if (!user.active) return NextResponse.json({ error: "Your account has been blocked." }, { status: 403 });
+  if (!user.active)
+    return NextResponse.json(
+      { error: "Your account has been blocked." },
+      { status: 403 }
+    );
 
   const fullUser = await prisma.user.findUnique({
     where: { id: user.id },
@@ -17,6 +21,7 @@ export async function GET() {
       id: true,
       email: true,
       credits: true,
+      totalCredits: true,
       totalRequests: true,
       image: true,
       provider: true,
@@ -34,6 +39,11 @@ export async function GET() {
       },
       apiKeys: true,
       active: true,
+      payments: {
+        where: { status: "SUCCESS" },
+        orderBy: { verifiedAt: "desc" },
+        include: { plan: true },
+      },
     },
   });
 

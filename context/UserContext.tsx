@@ -18,17 +18,27 @@ interface Plan {
   description: string;
 }
 
+interface Payment {
+  id: string;
+  plan: Plan;
+  verifiedAt?: string | null;
+  amount: number;
+  status: "PENDING" | "SUCCESS" | "FAILED";
+}
+
 interface User {
   id: string;
   email: string;
   active: boolean;
   credits: number;
+  totalCredits: number;
   currentPlan?: Plan | null;
   totalRequests: number;
-  apiKeys: string;
+  apiKeys?: { key: string }[];
   image?: string;
-  provider: string;
+  provider: string | null;
   createdAt: string;
+  payments?: Payment[]; 
 }
 
 interface UserContextType {

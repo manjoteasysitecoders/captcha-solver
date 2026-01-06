@@ -13,28 +13,26 @@ export default function Sidebar({ open }: { open: boolean }) {
   const pathname = usePathname();
   const { user } = useUser();
 
-  const plan = user?.currentPlan;
+  const planName = user?.currentPlan?.name ?? "Free";
 
-  const planName = plan?.name ?? "Free";
   const freeCredits = FREE_CREDITS;
-  const planCredits = plan?.credits ?? 0;
+  const purchasedCredits = user?.totalCredits ?? 0;
 
-  const totalCredits = freeCredits + planCredits;
+  const totalCreditsEarned = freeCredits + purchasedCredits;
   const remainingCredits = user?.credits ?? 0;
-
-  const usedCredits = Math.max(totalCredits - remainingCredits, 0);
+  const usedCredits = Math.max(totalCreditsEarned - remainingCredits, 0);
 
   let validity: number | null = null;
 
-  if (plan?.validity && user?.createdAt) {
-    const start = new Date(user.createdAt);
+  const lastPayment = user?.payments?.[0];
+  if (lastPayment?.plan?.validity && lastPayment?.verifiedAt) {
+    const start = new Date(lastPayment.verifiedAt);
     const end = new Date(start);
-    end.setDate(end.getDate() + plan.validity);
+    end.setDate(end.getDate() + lastPayment.plan.validity);
 
     const diff = Math.ceil(
       (end.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
     );
-
     validity = Math.max(diff, 0);
   }
 
@@ -90,7 +88,7 @@ export default function Sidebar({ open }: { open: boolean }) {
         <CreditsCard
           open={open}
           used={usedCredits}
-          total={totalCredits}
+          total={totalCreditsEarned}
           plan={planName}
           image={user?.currentPlan?.image}
           validity={validity}

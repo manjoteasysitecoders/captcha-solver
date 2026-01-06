@@ -1,6 +1,7 @@
 import {
   CreditCard,
   Dock,
+  History,
   KeyRound,
   LayoutDashboard,
   Percent,
@@ -42,9 +43,9 @@ export const dashboardSidebarLinks = [
 export const adminDashboardSidebarLinks = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { name: "Users", href: "/admin/dashboard/users", icon: Users },
-  //   { name: "API Keys", href: "/admin/dashboard/api-keys", icon: Key },
   { name: "Plans", href: "/admin/dashboard/plans", icon: CreditCard },
   { name: "Coupons", href: "/admin/dashboard/coupons", icon: Percent },
+  { name: "View History", href: "/admin/dashboard/history", icon: History },
   { name: "Documentation", href: "/docs", icon: Dock },
   // { name: "Settings", href: "/admin/dashboard/settings", icon: Settings },
 ];

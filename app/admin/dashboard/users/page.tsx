@@ -3,29 +3,44 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-type User = {
+interface AdminUser {
   id: string;
   email: string;
+  active: boolean;
   credits: number;
   totalRequests: number;
   provider: string | null;
   createdAt: string;
-  active: boolean;
-};
+  currentPlan?: {
+    name: string;
+  } | null;
+}
 
 export default function AdminUsersPage() {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
 
+  const [page, setPage] = useState(1);
+  const limit = 10;
+  const [totalPages, setTotalPages] = useState(1);
+
   async function fetchUsers() {
-    const res = await fetch("/api/admin/users");
-    const data = await res.json();
-    setUsers(data);
-    setLoading(false);
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/admin/users?page=${page}&limit=${limit}`);
+      const data = await res.json();
+
+      setUsers(data.users);
+      setTotalPages(data.pagination.totalPages);
+    } catch {
+      toast.error("Failed to load users");
+    } finally {
+      setLoading(false);
+    }
   }
 
-  async function toggleStatus(user: User) {
+  async function toggleStatus(user: AdminUser) {
     setUpdatingId(user.id);
 
     setUsers((prev) =>
@@ -56,7 +71,7 @@ export default function AdminUsersPage() {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [page]);
 
   if (loading) return <p>Loading users...</p>;
 
@@ -77,6 +92,7 @@ export default function AdminUsersPage() {
               <th className="p-4 font-medium">Credits</th>
               <th className="p-4 font-medium">Requests</th>
               <th className="p-4 font-medium">Provider</th>
+              <th className="p-4 font-medium">Current Plan</th>
               <th className="p-4 font-medium">Created</th>
               <th className="p-4 font-medium text-center">Status</th>
             </tr>
@@ -89,8 +105,8 @@ export default function AdminUsersPage() {
                   <td className="p-4 font-medium">{user.email}</td>
                   <td className="p-4">{user.credits}</td>
                   <td className="p-4">{user.totalRequests}</td>
-                  <td className="p-4"
-                  >{user.provider ?? "credentials"}</td>
+                  <td className="p-4">{user.provider ?? "credentials"}</td>
+                  <td className="p-4">{user.currentPlan?.name ?? "Free"}</td>
                   <td className="p-4">
                     {new Date(user.createdAt).toLocaleDateString()}
                   </td>
@@ -99,7 +115,14 @@ export default function AdminUsersPage() {
                     <button
                       disabled={updatingId === user.id}
                       onClick={() => toggleStatus(user)}
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${user.active ? "bg-green-600" : "bg-gray-400"} ${updatingId === user.id ? "opacity-50 cursor-not-allowed" : ""}`}>
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition ${
+                        user.active ? "bg-green-600" : "bg-gray-400"
+                      } ${
+                        updatingId === user.id
+                          ? "opacity-50 cursor-not-allowed"
+                          : ""
+                      }`}
+                    >
                       <span
                         className={`
                           inline-block h-4 w-4 transform rounded-full bg-white transition
@@ -122,6 +145,27 @@ export default function AdminUsersPage() {
             )}
           </tbody>
         </table>
+      </div>
+      <div className="flex justify-center items-center gap-4 pt-4">
+        <button
+          disabled={page === 1}
+          onClick={() => setPage((p) => p - 1)}
+          className="px-4 py-2 rounded-xl border border-primary disabled:opacity-50"
+        >
+          Prev
+        </button>
+
+        <span className="text-sm text-muted-foreground">
+          Page {page} of {totalPages}
+        </span>
+
+        <button
+          disabled={page === totalPages}
+          onClick={() => setPage((p) => p + 1)}
+          className="px-4 py-2 rounded-xl border border-primary disabled:opacity-50"
+        >
+          Next
+        </button>
       </div>
     </div>
   );

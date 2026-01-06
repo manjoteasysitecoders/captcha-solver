@@ -13,7 +13,7 @@ export default function AdminLayout({
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
-    <div className="lg:h-screen bg-white/90">
+    <div>
       {sidebarOpen && <AdminSidebar />}
 
       <div

@@ -21,6 +21,7 @@ model User {
   createdAt     DateTime  @default(now())
   password      String?
   credits       Int       @default(0)
+  totalCredits  Int       @default(0)
   currentPlanId String?
   totalRequests Int       @default(0)
   image         String?
