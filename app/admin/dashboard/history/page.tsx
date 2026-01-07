@@ -11,6 +11,10 @@ type Payment = {
   user: { email: string };
   plan: { name: string };
   coupon?: { code: string; percentage: number } | null;
+  invoiceNumber?: string | null;
+  invoicePdfUrl?: string | null;
+  invoicedAt?: string | null;
+  invoiceVisible?: boolean | null;
 };
 
 export default function PlanHistoryPage() {
@@ -54,7 +58,6 @@ export default function PlanHistoryPage() {
       setLoading(false);
     }
   };
-  
   const resetFilters = async () => {
     const empty = {
       email: "",
@@ -65,6 +68,49 @@ export default function PlanHistoryPage() {
     };
     setFilters(empty);
     setPage(1);
+  };
+
+  const generateInvoice = async (paymentId: string) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/admin/invoice/generate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ paymentId }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to generate invoice");
+      toast.success(
+        "Invoice generated. Publish to make it visible to the user."
+      );
+      fetchPayments();
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const publishInvoice = async (paymentId: string, visible: boolean) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/admin/invoice/publish`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ paymentId, visible }),
+      });
+      const data = await res.json();
+      if (!res.ok)
+        throw new Error(data.error || "Failed to update invoice visibility");
+      toast.success(
+        visible ? "Invoice published to user." : "Invoice unpublished"
+      );
+      fetchPayments();
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -147,10 +193,11 @@ export default function PlanHistoryPage() {
             <tr className="text-left text-muted-foreground">
               <th className="p-4 font-medium">User</th>
               <th className="p-4 font-medium">Plan</th>
-              <th className="p-4 font-medium">Amount</th>
+              <th className="p-4 font-medium">Amount (in ₹)</th>
               <th className="p-4 font-medium">Coupon</th>
               <th className="p-4 font-medium">Status</th>
               <th className="p-4 font-medium">Purchased</th>
+              <th className="p-4 font-medium">Invoice</th>
             </tr>
           </thead>
 
@@ -166,7 +213,7 @@ export default function PlanHistoryPage() {
                 <tr key={p.id} className="border-t border-primary">
                   <td className="p-4 font-medium">{p.user.email}</td>
                   <td className="p-4">{p.plan.name}</td>
-                  <td className="p-4">₹{p.amount}</td>
+                  <td className="p-4">{p.amount}</td>
                   <td className="p-4">
                     {p.coupon
                       ? `${p.coupon.code} (${p.coupon.percentage}%)`
@@ -188,12 +235,53 @@ export default function PlanHistoryPage() {
                   <td className="p-4">
                     {new Date(p.createdAt).toLocaleString()}
                   </td>
+                  <td className="p-4">
+                    {p.invoiceNumber ? (
+                      <div className="flex items-center gap-3">
+                        {p.invoicePdfUrl ? (
+                          <a
+                            href={p.invoicePdfUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-sm font-bold text-primary underline"
+                          >
+                            View
+                          </a>
+                        ) : null}
+
+                        {p.invoiceVisible ? (
+                          <button
+                            onClick={() => publishInvoice(p.id, false)}
+                            className="rounded-lg border border-primary px-2 py-1 text-sm text-primary"
+                          >
+                            Unpublish
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => publishInvoice(p.id, true)}
+                            className="rounded-lg bg-primary px-2 py-1 text-sm text-background"
+                          >
+                            Publish
+                          </button>
+                        )}
+                      </div>
+                    ) : p.status === "SUCCESS" ? (
+                      <button
+                        onClick={() => generateInvoice(p.id)}
+                        className="rounded-lg bg-primary px-3 py-1 text-sm text-background"
+                      >
+                        Generate Invoice
+                      </button>
+                    ) : (
+                      "—"
+                    )}
+                  </td>
                 </tr>
               ))
             ) : (
               <tr>
                 <td
-                  colSpan={6}
+                  colSpan={7}
                   className="p-8 text-center text-muted-foreground"
                 >
                   No results found

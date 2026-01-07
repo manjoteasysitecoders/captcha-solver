@@ -74,10 +74,12 @@ export async function POST(req: NextRequest) {
         planId: plan.id,
         couponId: appliedCoupon?.id,
         amount: totalAmount,
+        gstAmount,
+        discountedPrice,
         razorpayOrderId: order.id,
         status: "PENDING",
       },
-    });
+    })
 
     return NextResponse.json({
       ...order,

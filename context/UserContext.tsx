@@ -24,6 +24,10 @@ interface Payment {
   verifiedAt?: string | null;
   amount: number;
   status: "PENDING" | "SUCCESS" | "FAILED";
+  invoiceNumber?: string;
+  invoicePdfUrl?: string;
+  invoicedAt?: string;
+  invoiceVisible: boolean;
 }
 
 interface User {
@@ -38,7 +42,7 @@ interface User {
   image?: string;
   provider: string | null;
   createdAt: string;
-  payments?: Payment[]; 
+  payments?: Payment[];
 }
 
 interface UserContextType {

@@ -58,12 +58,20 @@ model Payment {
   userId            String
   planId            String
   couponId          String?
-  amount            Int
+  amount            Float
+  gstAmount         Float?
+  discountedPrice   Float?
   razorpayOrderId   String        @unique
   razorpayPaymentId String?       @unique
   status            PaymentStatus @default(PENDING)
   createdAt         DateTime      @default(now())
   verifiedAt        DateTime?
+
+  // Invoice fields
+  invoiceNumber     String?
+  invoicePdfUrl     String?
+  invoicedAt        DateTime?
+  invoiceVisible    Boolean       @default(false)
 
   user   User    @relation(fields: [userId], references: [id])
   plan   Plan    @relation(fields: [planId], references: [id])

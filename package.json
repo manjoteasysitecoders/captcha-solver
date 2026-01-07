@@ -25,6 +25,7 @@
     "nextra": "^4.6.1",
     "nextra-theme-docs": "^4.6.1",
     "openai": "^6.10.0",
+    "pdf-lib": "^1.17.1",
     "pg": "^8.16.3",
     "razorpay": "^2.9.6",
     "react": "19.2.1",

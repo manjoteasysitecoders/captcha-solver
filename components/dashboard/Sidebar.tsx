@@ -4,7 +4,7 @@ import { LogOut, Zap } from "lucide-react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { dashboardSidebarLinks } from "@/constants/navLinks";
 import { useUser } from "@/context/UserContext";
 import { FREE_CREDITS } from "@/constants/credits";
@@ -83,18 +83,19 @@ export default function Sidebar({ open }: { open: boolean }) {
         })}
       </nav>
 
-      {/* Credits */}
-      {user && (
-        <CreditsCard
-          open={open}
-          used={usedCredits}
-          total={totalCreditsEarned}
-          plan={planName}
-          image={user?.currentPlan?.image}
-          validity={validity}
-        />
-      )}
-
+      <AnimatePresence>
+        {user && open && (
+          <CreditsCard
+            open={open}
+            used={usedCredits}
+            total={totalCreditsEarned}
+            plan={planName}
+            image={user?.currentPlan?.image}
+            validity={validity}
+          />
+        )}
+      </AnimatePresence>
+      
       {/* Logout */}
       <button
         onClick={() => signOut({ callbackUrl: "/signin" })}
