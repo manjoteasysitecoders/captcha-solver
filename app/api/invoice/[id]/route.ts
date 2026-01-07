@@ -1,25 +1,20 @@
 import { NextResponse } from "next/server";
-import path from "path";
-import fs from "fs";
 import prisma from "@/lib/prisma";
 import { requireAuthUser } from "@/lib/require-auth-user";
 import { verifyAdmin } from "@/lib/admin-auth";
+import { generateInvoicePdf } from "@/lib/invoice";
 
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-      const { id } = await params;
-  const url = new URL(req.url);
-  const paymentId = id ?? url.pathname.split("/").pop();
+  const { id } = await params;
 
-  if (!paymentId)
-    return NextResponse.json(
-      { error: "Payment id is required" },
-      { status: 400 }
-    );
+  const payment = await prisma.payment.findUnique({
+    where: { id },
+    include: { user: true, plan: true },
+  });
 
-  const payment = await prisma.payment.findUnique({ where: { id: paymentId } });
   if (!payment)
     return NextResponse.json({ error: "Invoice not found" }, { status: 404 });
 
@@ -32,25 +27,17 @@ export async function GET(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     if (!payment.invoiceVisible)
       return NextResponse.json(
-        { error: "Invoice not yet published" },
+        { error: "Invoice not published" },
         { status: 403 }
       );
   }
 
-  const filePath = path.join(
-    process.cwd(),
-    "invoices",
-    `${payment.id}.pdf`
+  const pdfBytes = await generateInvoicePdf(
+    payment as any,
+    payment.invoiceNumber!
   );
-  if (!fs.existsSync(filePath))
-    return NextResponse.json(
-      { error: "Invoice file missing" },
-      { status: 404 }
-    );
 
-  const fileStream = fs.readFileSync(filePath);
-
-  return new Response(fileStream, {
+  return new Response(Buffer.from(pdfBytes), {
     status: 200,
     headers: {
       "Content-Type": "application/pdf",

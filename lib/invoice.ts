@@ -1,5 +1,3 @@
-import fs from "fs";
-import path from "path";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 
 type PaymentWithRelations = {
@@ -22,14 +20,7 @@ const VALUE_X = PAGE_SIZE[0] - MARGIN_X;
 export async function generateInvoicePdf(
   payment: PaymentWithRelations,
   invoiceNumber: string
-) {
-  const storageDir = path.join(process.cwd(), "invoices");
-  if (!fs.existsSync(storageDir)) {
-    fs.mkdirSync(storageDir, { recursive: true });
-  }
-
-  const filePath = path.join(storageDir, `${payment.id}.pdf`);
-
+): Promise<Uint8Array> {
   const pdfDoc = await PDFDocument.create();
   const page = pdfDoc.addPage(PAGE_SIZE);
   const { width, height } = page.getSize();
@@ -158,7 +149,6 @@ export async function generateInvoicePdf(
   });
 
   const pdfBytes = await pdfDoc.save();
-  fs.writeFileSync(filePath, pdfBytes);
 
-  return filePath;
+  return pdfBytes;
 }
