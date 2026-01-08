@@ -1,6 +1,7 @@
 "use client";
 
 import StatCard from "@/components/dashboard/StatCard";
+import { formatDate } from "@/lib/formatDate";
 import { CreditCard, Percent, Users, DollarSign, FileText } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -61,6 +62,11 @@ export default function AdminDashboard() {
           value={
             loading ? "…" : `₹${stats?.payments.totalRevenue.toFixed(2) ?? 0}`
           }
+        />
+        <StatCard
+          icon={<CreditCard className="w-6 h-6" />}
+          title="Total Payments"
+          value={loading ? "…" : stats?.payments.totalPayments ?? 0}
         />
         <StatCard
           icon={<FileText className="w-6 h-6" />}
@@ -151,7 +157,7 @@ export default function AdminDashboard() {
                   <td className="p-3">{p.plan.name}</td>
                   <td className="p-3">₹{p.amount.toFixed(2)}</td>
                   <td className="p-3">
-                    {new Date(p.createdAt).toLocaleString()}
+                    {formatDate(p.createdAt)}
                   </td>
                 </tr>
               ))

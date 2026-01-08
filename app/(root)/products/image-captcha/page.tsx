@@ -101,10 +101,11 @@ export default function ImageCaptchaPage() {
             <div className="flex flex-col items-center gap-4">
               <Upload className="w-12 h-12 text-primary" />
               <h4 className="text-xl font-semibold text-background">
-                1. Submit an Image URL
+                1. Submit an Image or URL
               </h4>
               <p className="text-center text-background">
-                Send a request containing the URL of the CAPTCHA image.{" "}
+                Send a request containing either an image file
+                (multipart/form-data) or a direct image URL.
               </p>
             </div>
             <div className="flex flex-col items-center gap-4">
@@ -207,19 +208,19 @@ export default function ImageCaptchaPage() {
           </h4>
 
           <p className="text-background text-center">
-            Use the Image CAPTCHA API by sending a POST request with the image
-            URL.
+            Use the Image CAPTCHA API by sending a POST request with either an
+            image URL or an uploaded image file.
           </p>
 
           <pre className="rounded-2xl bg-gray-700 p-6 text-sm text-green-400 overflow-x-auto">
             {`POST /api/public/imageCaptcha
 
-Content-Type: application/json,
+Content-Type: application/json
 x-api-key: YOUR_API_KEY
 
 Request:
 {
-  "imageUrl": "https://example.com/captcha.png"
+  "url": "https://example.com/captcha.png"
 }
 
 Response:
@@ -235,10 +236,9 @@ Response:
               Step 1: Send the Request
             </h4>
             <p>
-              Include your API key and the image URL in the request. Ensure the
-              URL points directly to the image file (PNG, JPG, or GIF).
+              Include your API key and either an image URL or an uploaded image
+              file. URLs must point directly to the image (PNG, JPG, or GIF).
             </p>
-
             <h4 className="text-xl font-semibold text-background">
               Step 2: Receive Result
             </h4>
@@ -246,29 +246,28 @@ Response:
               The API will respond with a JSON object containing the extracted
               text. Read the returned text from it.
             </p>
-
             <h4 className="text-xl font-semibold text-background">
               Step 3: Handle Errors
             </h4>
-              The API returns appropriate HTTP status codes, such as
-              <ul className="mt-2">
-                <li>
-                  <code className="text-red-400">400</code> for missing or
-                  invalid input.
-                </li>
-                <li>
-                  <code className="text-red-400">401</code> for missing or
-                  invalid API key.
-                </li>
-                <li>
-                  <code className="text-red-400">403</code> for insufficient
-                  credits.
-                </li>
-                <li>
-                  <code className="text-red-400">500</code> for internal
-                  processing errors.
-                </li>
-              </ul>
+            The API returns appropriate HTTP status codes, such as
+            <ul className="mt-2">
+              <li>
+                <code className="text-red-400">400</code> for missing or invalid
+                input.
+              </li>
+              <li>
+                <code className="text-red-400">401</code> for missing or invalid
+                API key.
+              </li>
+              <li>
+                <code className="text-red-400">403</code> for insufficient
+                credits.
+              </li>
+              <li>
+                <code className="text-red-400">500</code> for internal
+                processing errors.
+              </li>
+            </ul>
           </div>
 
           <p className="text-center text-background/50 mt-6">

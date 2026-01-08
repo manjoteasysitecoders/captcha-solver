@@ -29,11 +29,11 @@ export async function GET() {
       id: true,
       code: true,
       percentage: true,
-      _count: { select: { payments: true } },
+      usedCount: true,
       isActive: true,
     },
     orderBy: {
-      payments: { _count: "desc" },
+      usedCount: "desc",
     },
   });
 
@@ -47,13 +47,14 @@ export async function GET() {
     pendingPayments,
     invoicesCount,
     recentPurchases,
+    totalPayments,
   ] = await Promise.all([
     prisma.user.count(),
     prisma.user.count({ where: { active: true } }),
     prisma.user.aggregate({ _sum: { credits: true } }),
     prisma.user.count({ where: { currentPlanId: { not: null } } }),
     prisma.user.count({ where: { createdAt: { gte: sevenDaysAgo } } }),
-    
+
     // Payments stats
     prisma.payment.aggregate({
       _sum: { amount: true },
@@ -66,7 +67,7 @@ export async function GET() {
     prisma.payment.findMany({
       where: { createdAt: { gte: sevenDaysAgo }, status: "SUCCESS" },
       orderBy: { createdAt: "desc" },
-      take: 10,
+      take: 5,
       select: {
         id: true,
         user: { select: { email: true } },
@@ -75,6 +76,7 @@ export async function GET() {
         createdAt: true,
       },
     }),
+    prisma.payment.count({ where: { status: "SUCCESS" } }),
   ]);
 
   return NextResponse.json({
@@ -103,7 +105,7 @@ export async function GET() {
       topUsed: coupons[0]?.code ?? null,
       usage: coupons.map((c) => ({
         code: c.code,
-        timesUsed: c._count.payments,
+        timesUsed: c.usedCount,
       })),
     },
     payments: {
@@ -111,6 +113,7 @@ export async function GET() {
       pending: pendingPayments,
       invoicesGenerated: invoicesCount,
       recentPurchases,
+      totalPayments
     },
   });
 }

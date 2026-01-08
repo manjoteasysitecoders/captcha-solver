@@ -1,5 +1,6 @@
 "use client";
 
+import { formatDate } from "@/lib/formatDate";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -233,7 +234,7 @@ export default function PlanHistoryPage() {
                     </span>
                   </td>
                   <td className="p-4">
-                    {new Date(p.createdAt).toLocaleString()}
+                    {formatDate(p.createdAt)}
                   </td>
                   <td className="p-4">
                     {p.invoiceNumber ? (

@@ -24,12 +24,18 @@ Requests without an API key or with an invalid key will be rejected.
 
 - Each successful request increments the user's **totalRequests** count.
 
-## Request body
+## Request options
+
+**Option 1: Upload Image (multipart/form-data)**
+
+**Content-type:**  ```multipart/form-data```
+
+**Option 2: Image URL (application/json)**
 
 **Content-type:**  ```application/json```
 
 ```json
-{ "imageUrl": "https://example.com/captcha.png" }
+{ "url": "https://example.com/captcha.png" }
 ```
 
 **Successful Response (200):**
@@ -47,18 +53,18 @@ Requests without an API key or with an invalid key will be rejected.
 - Extracted text preserves original casing, spacing, and line breaks as closely as possible.
 
 - The Vision model attempts to read all visible text, not only alphanumeric CAPTCHA characters.
-
+                  
 ### **Error Responses:**
 
-**Missing imageUrl (400)**
+**Missing Image Input (400)**
 ```
 {
-"success": false,
-"error": "imageUrl is required"
+  "success": false,
+  "error": "Provide either a 'file' or a 'url'."
 }
 ```
 
-**Missing API Key (401)**
+**Missing API Key (401)** 
 ```
 {
 "error": "API key is required"

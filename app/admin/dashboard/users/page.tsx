@@ -1,5 +1,6 @@
 "use client";
 
+import { formatDate } from "@/lib/formatDate";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -108,7 +109,7 @@ export default function AdminUsersPage() {
                   <td className="p-4">{user.provider ?? "credentials"}</td>
                   <td className="p-4">{user.currentPlan?.name ?? "Free"}</td>
                   <td className="p-4">
-                    {new Date(user.createdAt).toLocaleDateString()}
+                    {formatDate(user.createdAt)}
                   </td>
 
                   <td className="p-4 text-center">

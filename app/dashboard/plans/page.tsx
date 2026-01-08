@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { PricingCard } from "@/components/PricingCard";
 import Link from "next/link";
+import { formatDate } from "@/lib/formatDate";
 
 type Payment = {
   id: string;
@@ -70,7 +71,7 @@ export default function PlansPage() {
 
         {!loading && !history.length && (
           <div className="rounded-2xl border border-primary bg-card p-8 text-center text-muted-foreground shadow-lg">
-            No invoices available yet.
+            No plans purchased yet.
           </div>
         )}
 
@@ -90,7 +91,7 @@ export default function PlansPage() {
 
                   <p className="text-xs text-muted-foreground">
                     Purchased on{" "}
-                    {new Date(payment.createdAt).toLocaleDateString()}
+                    {formatDate(payment.createdAt)}
                   </p>
                 </div>
 

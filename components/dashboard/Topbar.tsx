@@ -40,7 +40,7 @@ export default function Topbar({
             <img
               src={user.image}
               alt="Profile"
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover rounded-full"
             />
           ) : (
             <User size={18} />

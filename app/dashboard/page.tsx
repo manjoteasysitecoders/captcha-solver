@@ -37,8 +37,9 @@ export default function DashboardPage() {
     latestPayment?.verifiedAt || null
   );
 
-  const freeCredits = FREE_CREDITS;
-  const creditsUsed = user.totalCredits + freeCredits - user.credits;
+  const totalAvailableCredits = user.totalCredits + FREE_CREDITS;
+
+  const creditsUsed = totalAvailableCredits - user.credits;
   const isFreePlan = !user.currentPlan || user.currentPlan.name === "Free";
 
   return (
@@ -64,18 +65,6 @@ export default function DashboardPage() {
         />
 
         <StatCard
-          title="Days Remaining"
-          value={
-            daysLeft !== null
-              ? `${daysLeft}`
-              : user.currentPlan
-              ? "Unlimited"
-              : "-"
-          }
-          icon={<CalendarClock size={40} />}
-        />
-
-        <StatCard
           title="Credits Remaining"
           value={user.credits.toLocaleString()}
           icon={<Package size={40} />}
@@ -89,7 +78,7 @@ export default function DashboardPage() {
 
         <StatCard
           title="Total Credits"
-          value={user.totalCredits.toLocaleString()}
+          value={totalAvailableCredits.toLocaleString()}
           icon={<Package size={40} />}
         />
 
@@ -98,6 +87,14 @@ export default function DashboardPage() {
           value={user.totalRequests.toLocaleString()}
           icon={<Zap size={40} />}
         />
+
+        {(daysLeft !== null || user.currentPlan?.validity) && (
+          <StatCard
+            title="Days Remaining"
+            value={daysLeft !== null ? `${daysLeft}` : "Unlimited"}
+            icon={<CalendarClock size={40} />}
+          />
+        )}
       </section>
 
       {/* Upgrade CTA */}
