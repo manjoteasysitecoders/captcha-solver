@@ -1,6 +1,7 @@
 import { Footer, Layout, Navbar } from "nextra-theme-docs";
 import { getPageMap } from "nextra/page-map";
 import "nextra-theme-docs/style.css";
+import { SearchWithCallback } from "./search-with-callback";
 
 const sidebar = { defaultMenuCollapseLevel: 1 };
 const navbar = <Navbar logo={<b>CAPTCHA Solver</b>} />;
@@ -25,7 +26,10 @@ export default async function DocsLayout({
       sidebar={sidebar}
       navbar={navbar}
       pageMap={pageMap}
+      search={<SearchWithCallback />}
       footer={footer}
+      editLink={false}
+      feedback={{ content: null }}
       darkMode={false}
       nextThemes={{
         attribute: "class",

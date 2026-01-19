@@ -26,19 +26,6 @@ const itemVariants: Variants = {
   },
 };
 
-const floatCardVariants: Variants = {
-  hidden: { opacity: 0, y: 30, scale: 0.96 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: 0.9,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
-};
-
 export default function HeroSection() {
   return (
     <motion.section
@@ -131,38 +118,12 @@ export default function HeroSection() {
           >
             <div className="relative">
               <Image
-                src="/banner-robot.png"
+                src="/hero.webp"
                 alt="CAPTCHA Solver"
-                width={560}
-                height={560}
+                width={600}
+                height={600}
                 priority
               />
-
-              {/* Floating Card */}
-              <motion.div
-                className="absolute bottom-6 left-6 right-8 rounded-xl bg-card text-card-foreground shadow-lg border border-border p-4"
-                variants={floatCardVariants}
-                initial="hidden"
-                animate="visible"
-              >
-                <div className="flex items-center justify-between text-sm font-medium">
-                  <span>Captcha Solved</span>
-                  <span className="text-primary">✔ Success</span>
-                </div>
-
-                <div className="mt-2 h-2 w-full rounded bg-muted">
-                  <motion.div
-                    className="h-2 rounded bg-primary"
-                    initial={{ width: 0 }}
-                    animate={{ width: "85%" }}
-                    transition={{
-                      duration: 1.4,
-                      delay: 0.6,
-                      ease: [0.22, 1, 0.36, 1],
-                    }}
-                  />
-                </div>
-              </motion.div>
             </div>
           </motion.div>
         </div>

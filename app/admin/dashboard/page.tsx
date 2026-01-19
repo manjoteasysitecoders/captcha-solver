@@ -2,7 +2,14 @@
 
 import StatCard from "@/components/dashboard/StatCard";
 import { formatDate } from "@/lib/formatDate";
-import { CreditCard, Percent, Users, DollarSign, FileText } from "lucide-react";
+import {
+  CreditCard,
+  Percent,
+  Users,
+  DollarSign,
+  FileText,
+  TrendingUp,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -14,9 +21,7 @@ export default function AdminDashboard() {
     try {
       const res = await fetch("/api/admin/stats");
       const data = await res.json();
-
       if (!res.ok) throw new Error(data.error || "Failed to load stats");
-
       setStats(data);
     } catch (err: any) {
       toast.error(err.message);
@@ -29,6 +34,9 @@ export default function AdminDashboard() {
     fetchStats();
   }, []);
 
+  const renderValue = (value: any, isCurrency = false) =>
+    loading ? "…" : isCurrency ? `₹${value.toFixed(2)}` : value ?? 0;
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -40,47 +48,99 @@ export default function AdminDashboard() {
       </div>
 
       {/* Top Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {/* Users */}
         <StatCard
           icon={<Users className="w-6 h-6" />}
           title="Total Users"
-          value={loading ? "…" : stats?.users.total ?? 0}
+          value={renderValue(stats?.users.total)}
         />
         <StatCard
-          icon={<CreditCard className="w-6 h-6" />}
-          title="Total Plans"
-          value={loading ? "…" : stats?.plans.total ?? 0}
+          icon={<Users className="w-6 h-6" />}
+          title="Active Users"
+          value={renderValue(stats?.users.active)}
         />
         <StatCard
-          icon={<Percent className="w-6 h-6" />}
-          title="Total Coupons"
-          value={loading ? "…" : stats?.coupons.total ?? 0}
+          icon={<Users className="w-6 h-6" />}
+          title="Inactive Users"
+          value={renderValue(stats?.users.inactive)}
+        />
+        <StatCard
+          icon={<TrendingUp className="w-6 h-6" />}
+          title="Recent Users (7d)"
+          value={renderValue(stats?.users.recent)}
         />
         <StatCard
           icon={<DollarSign className="w-6 h-6" />}
+          title="Total Credits"
+          value={renderValue(stats?.users.totalCredits, true)}
+        />
+
+        {/* Plans */}
+        <StatCard
+          icon={<CreditCard className="w-6 h-6" />}
+          title="Total Plans"
+          value={renderValue(stats?.plans.total)}
+        />
+        <StatCard
+          icon={<CreditCard className="w-6 h-6" />}
+          title="Avg Plan Price"
+          value={renderValue(stats?.plans.avgPrice, true)}
+        />
+        <StatCard
+          icon={<CreditCard className="w-6 h-6" />}
+          title="Most Popular Plan"
+          value={loading ? "…" : stats?.plans.mostPopular ?? "N/A"}
+        />
+
+        {/* Coupons */}
+        <StatCard
+          icon={<Percent className="w-6 h-6" />}
+          title="Total Coupons"
+          value={renderValue(stats?.coupons.total)}
+        />
+        <StatCard
+          icon={<Percent className="w-6 h-6" />}
+          title="Active Coupons"
+          value={renderValue(stats?.coupons.active)}
+        />
+        <StatCard
+          icon={<Percent className="w-6 h-6" />}
+          title="Inactive Coupons"
+          value={renderValue(stats?.coupons.inactive)}
+        />
+        <StatCard
+          icon={<Percent className="w-6 h-6" />}
+          title="Top Used Coupon"
+          value={loading ? "…" : stats?.coupons.topUsed ?? "N/A"}
+        />
+
+        {/* Payments */}
+        <StatCard
+          icon={<DollarSign className="w-6 h-6" />}
           title="Total Revenue"
-          value={
-            loading ? "…" : `₹${stats?.payments.totalRevenue.toFixed(2) ?? 0}`
-          }
+          value={renderValue(stats?.payments.totalRevenue, true)}
         />
         <StatCard
           icon={<CreditCard className="w-6 h-6" />}
           title="Total Payments"
-          value={loading ? "…" : stats?.payments.totalPayments ?? 0}
+          value={renderValue(stats?.payments.totalPayments)}
         />
         <StatCard
           icon={<FileText className="w-6 h-6" />}
           title="Invoices Generated"
-          value={loading ? "…" : stats?.payments.invoicesGenerated ?? 0}
+          value={renderValue(stats?.payments.invoicesGenerated)}
+        />
+        <StatCard
+          icon={<DollarSign className="w-6 h-6" />}
+          title="Pending Payments"
+          value={renderValue(stats?.payments.pending)}
         />
       </div>
 
+      {/* Plans Purchased & Coupon Usage */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Plans Purchased Card */}
-        <div
-          className="rounded-2xl border border-primary bg-card p-6 shadow-lg
-                sm:max-h-none overflow-y-auto"
-        >
+        <div className="rounded-2xl border border-primary bg-card p-6 shadow-lg overflow-y-auto sm:max-h-none">
           <h2 className="text-lg font-semibold mb-4">Plans Purchased</h2>
           {loading ? (
             <p>Loading...</p>
@@ -103,11 +163,7 @@ export default function AdminDashboard() {
           )}
         </div>
 
-        {/* Coupon Usage Card */}
-        <div
-          className="rounded-2xl border border-primary bg-card p-6 shadow-lg
-                sm:max-h-none overflow-y-auto"
-        >
+        <div className="rounded-2xl border border-primary bg-card p-6 shadow-lg overflow-y-auto sm:max-h-none">
           <h2 className="text-lg font-semibold mb-4">Coupon Usage</h2>
           {loading ? (
             <p>Loading...</p>
@@ -156,9 +212,7 @@ export default function AdminDashboard() {
                   <td className="p-3">{p.user.email}</td>
                   <td className="p-3">{p.plan.name}</td>
                   <td className="p-3">₹{p.amount.toFixed(2)}</td>
-                  <td className="p-3">
-                    {formatDate(p.createdAt)}
-                  </td>
+                  <td className="p-3">{formatDate(p.createdAt)}</td>
                 </tr>
               ))
             ) : (

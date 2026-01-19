@@ -63,9 +63,9 @@ export async function GET() {
     prisma.payment.count({ where: { status: "PENDING" } }),
     prisma.payment.count({ where: { invoiceVisible: true } }),
 
-    // Recent purchases (last 7 days)
+    // Recent purchases
     prisma.payment.findMany({
-      where: { createdAt: { gte: sevenDaysAgo }, status: "SUCCESS" },
+      where: { status: "SUCCESS" },
       orderBy: { createdAt: "desc" },
       take: 5,
       select: {
