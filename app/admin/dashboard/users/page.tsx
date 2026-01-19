@@ -26,10 +26,15 @@ export default function AdminUsersPage() {
   const limit = 10;
   const [totalPages, setTotalPages] = useState(1);
 
+  const [search, setSearch] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+
   async function fetchUsers() {
     setLoading(true);
     try {
-      const res = await fetch(`/api/admin/users?page=${page}&limit=${limit}`);
+      const res = await fetch(
+        `/api/admin/users?page=${page}&limit=${limit}&search=${encodeURIComponent(searchTerm)}`,
+      );
       const data = await res.json();
 
       setUsers(data.users);
@@ -45,7 +50,7 @@ export default function AdminUsersPage() {
     setUpdatingId(user.id);
 
     setUsers((prev) =>
-      prev.map((u) => (u.id === user.id ? { ...u, active: !u.active } : u))
+      prev.map((u) => (u.id === user.id ? { ...u, active: !u.active } : u)),
     );
 
     try {
@@ -63,7 +68,7 @@ export default function AdminUsersPage() {
       toast.error(err.message);
 
       setUsers((prev) =>
-        prev.map((u) => (u.id === user.id ? { ...u, active: user.active } : u))
+        prev.map((u) => (u.id === user.id ? { ...u, active: user.active } : u)),
       );
     } finally {
       setUpdatingId(null);
@@ -72,17 +77,37 @@ export default function AdminUsersPage() {
 
   useEffect(() => {
     fetchUsers();
-  }, [page]);
+  }, [page, searchTerm]);
 
-  if (loading) return <p>Loading users...</p>;
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setPage(1);
+      setSearchTerm(search);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [search]);
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-extrabold tracking-tight">Users</h1>
-        <p className="text-sm text-muted-foreground">
-          Manage registered users and their access
-        </p>
+      <div className="flex gap-2 items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-extrabold tracking-tight">Users</h1>
+          <p className="text-sm text-muted-foreground">
+            Manage registered users and their access
+          </p>
+        </div>
+
+        {/* Search Input */}
+        <div className="flex gap-2 items-center">
+          <input
+            type="text"
+            placeholder="Search by email"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="px-4 py-2 border border-primary rounded-xl w-72"
+          />
+        </div>
       </div>
 
       <div className="rounded-2xl border border-primary bg-card shadow-lg overflow-x-auto">
@@ -100,7 +125,16 @@ export default function AdminUsersPage() {
           </thead>
 
           <tbody>
-            {users.length ? (
+            {loading ? (
+              <tr>
+                <td
+                  colSpan={7}
+                  className="p-8 text-center text-muted-foreground"
+                >
+                  Loading users...
+                </td>
+              </tr>
+            ) : users.length ? (
               users.map((user) => (
                 <tr key={user.id} className="border-t border-primary">
                   <td className="p-4 font-medium">{user.email}</td>
@@ -108,10 +142,7 @@ export default function AdminUsersPage() {
                   <td className="p-4">{user.totalRequests}</td>
                   <td className="p-4">{user.provider ?? "credentials"}</td>
                   <td className="p-4">{user.currentPlan?.name ?? "Free"}</td>
-                  <td className="p-4">
-                    {formatDate(user.createdAt)}
-                  </td>
-
+                  <td className="p-4">{formatDate(user.createdAt)}</td>
                   <td className="p-4 text-center">
                     <button
                       disabled={updatingId === user.id}
@@ -126,9 +157,9 @@ export default function AdminUsersPage() {
                     >
                       <span
                         className={`
-                          inline-block h-4 w-4 transform rounded-full bg-white transition
-                          ${user.active ? "translate-x-6" : "translate-x-1"}
-                        `}
+                inline-block h-4 w-4 transform rounded-full bg-white transition
+                ${user.active ? "translate-x-6" : "translate-x-1"}
+              `}
                       />
                     </button>
                   </td>
@@ -137,7 +168,7 @@ export default function AdminUsersPage() {
             ) : (
               <tr>
                 <td
-                  colSpan={6}
+                  colSpan={7}
                   className="p-8 text-center text-muted-foreground"
                 >
                   No users found
@@ -147,6 +178,7 @@ export default function AdminUsersPage() {
           </tbody>
         </table>
       </div>
+
       <div className="flex justify-center items-center gap-4 pt-4">
         <button
           disabled={page === 1}
