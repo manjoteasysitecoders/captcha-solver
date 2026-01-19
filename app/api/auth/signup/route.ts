@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { hashPassword } from "@/lib/auth";
 import { FREE_CREDITS } from "@/constants/credits";
+import { generateOTP, hashOtp, sendVerificationEmail } from "@/lib/emailOtp";
 
 export async function POST(req: NextRequest) {
   try {
@@ -30,6 +31,8 @@ export async function POST(req: NextRequest) {
     }
 
     const hashedPassword = await hashPassword(password);
+    const otp = generateOTP();
+    const otpHash = hashOtp(otp);
 
     await prisma.user.create({
       data: {
@@ -37,8 +40,16 @@ export async function POST(req: NextRequest) {
         password: hashedPassword,
         credits: FREE_CREDITS,
         provider: "credentials",
+        emailToken: {
+          create: {
+            token: otpHash,
+            expiresAt: new Date(Date.now() + 2 * 60 * 1000),
+          },
+        },
       },
     });
+
+    await sendVerificationEmail(email, otp);
 
     return NextResponse.json({ success: true }, { status: 201 });
   } catch {

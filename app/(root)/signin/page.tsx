@@ -1,18 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion, type Variants } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.12 },
-  },
+  visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
 };
 
 const itemVariants: Variants = {
@@ -135,15 +132,27 @@ export default function SignInPage() {
 
 function SigninForm() {
   const router = useRouter();
+  const [step, setStep] = useState<"signin" | "verify">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [otp, setOtp] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [resendCooldown, setResendCooldown] = useState(0);
 
-  async function handleSubmit(e: React.FormEvent) {
+  // Countdown for OTP resend
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const interval = setInterval(
+      () => setResendCooldown((prev) => prev - 1),
+      1000
+    );
+    return () => clearInterval(interval);
+  }, [resendCooldown]);
+
+  async function handleSignIn(e: React.FormEvent) {
     e.preventDefault();
-    console.log("signin: submitting", { email });
     setLoading(true);
     setError(null);
 
@@ -154,15 +163,16 @@ function SigninForm() {
         redirect: false,
       });
 
-      console.log("signin result", result);
+      if (!result) throw new Error("Sign in failed");
 
-      if (!result || result.error) {
-        const msg = result?.error ?? "Invalid email or password";
-        setError(
-          msg.toLowerCase().includes("block")
-            ? "Your account has been blocked. Please contact support."
-            : msg
-        );
+      if (result.error) {
+        if (result.error === "Email not verified") {
+          setStep("verify");
+          await resendOtp();
+          setResendCooldown(60);
+          return;
+        }
+        setError(result.error);
         return;
       }
 
@@ -172,78 +182,149 @@ function SigninForm() {
     }
   }
 
+  async function handleVerifyOtp(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch("/api/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Invalid OTP");
+
+      await signIn("credentials", { email, password, redirect: false });
+      router.push("/dashboard");
+    } catch (err: any) {
+      setError(err.message || "Verification failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function resendOtp() {
+    if (loading) return;
+    setLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch("/api/auth/resend-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        if (res.status === 429 && data.message) {
+          const match = data.message.match(/(\d+)s/);
+          const waitTime = match ? parseInt(match[1], 10) : 60;
+          setResendCooldown(waitTime);
+        }
+        throw new Error(data.message || "Failed to resend OTP");
+      }
+      setResendCooldown(60);
+    } catch (err: any) {
+      setError(err.message || "Failed to resend OTP");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="mt-8 space-y-5">
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email address"
-        className="
-          h-12 w-full rounded-xl
-          border border-primary/50 bg-background
-          px-4 text-base
-          focus:outline-none focus:ring-2 focus:ring-primary
-        "
-        required
-      />
+    <>
+      {step === "signin" && (
+        <form onSubmit={handleSignIn} className="mt-8 space-y-5">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email address"
+            required
+            className="h-12 w-full rounded-xl border border-primary/50 bg-background px-4"
+          />
 
-      <div className="relative">
-        <input
-          type={showPassword ? "text" : "password"}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          className="
-      h-12 w-full rounded-xl
-      border border-primary/50 bg-background
-      px-4 pr-12 text-base
-      focus:outline-none focus:ring-2 focus:ring-primary
-    "
-          required
-        />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              required
+              className="h-12 w-full rounded-xl border border-primary/50 bg-background px-4 pr-12"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((p) => !p)}
+              className="absolute right-3 top-1/2 -translate-y-1/2"
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
 
-        <button
-          type="button"
-          onClick={() => setShowPassword((prev) => !prev)}
-          className="
-      absolute right-3 top-1/2 -translate-y-1/2
-      text-foreground/50 hover:text-foreground
-      transition
-    "
-          aria-label={showPassword ? "Hide password" : "Show password"}
-        >
-          {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-        </button>
-      </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="h-12 w-full rounded-xl bg-primary font-semibold text-primary-foreground"
+          >
+            {loading ? "Signing in..." : "Sign In"}
+          </button>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="
-          mt-2 h-12 w-full
-          rounded-xl bg-primary
-          font-semibold text-primary-foreground
-          transition hover:bg-primary/90 disabled:opacity-60
-        "
-      >
-        {loading ? "Signing in..." : "Sign In"}
-      </button>
+          <button
+            type="button"
+            disabled={loading}
+            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+            className="h-12 w-full rounded-xl border border-primary/40 font-semibold"
+          >
+            Continue with Google
+          </button>
 
-      <button
-        type="button"
-        disabled={loading}
-        onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-        className="
-          mt-3 h-12 w-full
-          rounded-xl border border-primary/40
-          font-semibold transition-colors hover:bg-primary/50 cursor-pointer
-        "
-      >
-        Continue with Google
-      </button>
+          {error && <p className="text-sm text-red-500">{error}</p>}
+        </form>
+      )}
 
-      {error && <p className="text-sm text-red-500">{error}</p>}
-    </form>
+      {step === "verify" && (
+        <form onSubmit={handleVerifyOtp} className="mt-8 space-y-5">
+          <p className="text-sm text-center text-foreground/60">
+            Enter the OTP sent to <strong>{email}</strong>
+          </p>
+
+          <input
+            type="text"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            placeholder="Enter OTP"
+            className="h-12 w-full rounded-xl border border-primary/50 bg-background px-4"
+          />
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="h-12 w-full rounded-xl bg-primary font-semibold text-primary-foreground"
+          >
+            {loading ? "Verifying..." : "Verify & Continue"}
+          </button>
+
+          <button
+            type="button"
+            onClick={resendOtp}
+            disabled={resendCooldown > 0 || loading}
+            className={`w-full text-sm underline ${
+              resendCooldown > 0
+                ? "text-gray-400 cursor-not-allowed"
+                : "text-primary"
+            }`}
+          >
+            {resendCooldown > 0
+              ? `Resend OTP in ${resendCooldown}s`
+              : "Resend OTP"}
+          </button>
+
+          {error && <p className="text-sm text-red-500">{error}</p>}
+        </form>
+      )}
+    </>
   );
 }

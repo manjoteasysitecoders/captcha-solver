@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     if (!rawKey) {
       return NextResponse.json(
         { error: "API key is required" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -43,14 +43,14 @@ export async function POST(request: NextRequest) {
     if (keyRecord.user.credits < 10) {
       return NextResponse.json(
         { error: "Insufficient credits" },
-        { status: 403 }
+        { status: 403 },
       );
     }
 
     if (!file && !audioUrl) {
       return NextResponse.json(
         { success: false, error: "Provide either a 'file' or a 'url'." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -63,27 +63,25 @@ export async function POST(request: NextRequest) {
       data: { credits: { decrement: 10 }, totalRequests: { increment: 1 } },
     });
 
+    await prisma.apiKey.update({
+      where: { id: keyRecord.id },
+      data: { lastUsedAt: new Date() },
+    });
+
     return NextResponse.json(
       {
         success: true,
         message: "Audio transcribed successfully",
         sentence: result.sentence,
       },
-      { status: 200 }
+      { status: 200 },
     );
-    // Update lastUsedAt for the API key
-    await prisma.apiKey.update({
-      where: { id: keyRecord.id },
-      data: { lastUsedAt: new Date() },
-    });
-
-    return NextResponse.json({ sentence: result.sentence }, { status: 200 });
   } catch (err) {
     const error = err as Error;
     console.error("voiceCaptcha error", error);
     return NextResponse.json(
       { error: error.message || "Failed to transcribe audio" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

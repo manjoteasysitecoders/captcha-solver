@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import {
-   Mic,
+  Mic,
   Zap,
   CheckCircle2,
   ShieldCheck,
@@ -241,7 +241,8 @@ x-api-key: YOUR_API_KEY
 Response:
 {
   "success": true,
-  "sentence": "please select all images containing traffic lights"
+  "message": "Audio transcribed successfully",
+  "sentence": "<normalized transcription>"
 }
 `}
           </pre>

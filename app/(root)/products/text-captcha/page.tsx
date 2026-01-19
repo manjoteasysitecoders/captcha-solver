@@ -1,7 +1,19 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Loader2, ImageIcon, Upload, FileText, Zap, CheckCircle2, ShieldCheck, Code2, Layers } from "lucide-react";
+import {
+  ArrowRight,
+  Sparkles,
+  Loader2,
+  ImageIcon,
+  Upload,
+  FileText,
+  Zap,
+  CheckCircle2,
+  ShieldCheck,
+  Code2,
+  Layers,
+} from "lucide-react";
 import WhyBetterSection from "@/components/WhyBetterSection";
 import CTASection from "@/components/CTASection";
 import PricingSection from "@/components/PricingSection";
@@ -77,7 +89,8 @@ export default function TextCaptchaPage() {
           >
             <h2 className="text-4xl font-bold text-background">How It Works</h2>
             <p className="mt-4 text-background">
-              Simple, synchronous processing — no background jobs or polling.{" "}
+              Simple, synchronous processing — no background jobs or
+              polling.{" "}
             </p>
           </motion.div>
 
@@ -214,7 +227,8 @@ Request:
 Response:
 {
   "success": true,
-  "answer": "Extracted final answer"
+  "message": "Received final result.",
+  "answer": "<extracted answer>"
 }`}
           </pre>
 
@@ -223,7 +237,6 @@ Response:
               Step 1: Submit Text
             </h4>
             <p>Send a POST request with the text input.</p>
-
             <h4 className="text-xl font-semibold text-background">
               Step 2: Receive Result
             </h4>
@@ -231,29 +244,28 @@ Response:
               The API responds with a JSON object containing the extracted
               answer.
             </p>
-
             <h4 className="text-xl font-semibold text-background">
               Step 3: Handle Errors
             </h4>
-              The API returns appropriate HTTP status codes, such as
-              <ul className="mt-2">
-                <li>
-                  <code className="text-red-400">400</code> for missing or
-                  invalid text.
-                </li>
-                <li>
-                  <code className="text-red-400">401</code> for missing or
-                  invalid API key.
-                </li>
-                <li>
-                  <code className="text-red-400">403</code> for insufficient
-                  credits.
-                </li>
-                <li>
-                  <code className="text-red-400">500</code> for internal
-                  processing errors.
-                </li>
-              </ul>
+            The API returns appropriate HTTP status codes, such as
+            <ul className="mt-2">
+              <li>
+                <code className="text-red-400">400</code> for missing or invalid
+                text.
+              </li>
+              <li>
+                <code className="text-red-400">401</code> for missing or invalid
+                API key.
+              </li>
+              <li>
+                <code className="text-red-400">403</code> for insufficient
+                credits.
+              </li>
+              <li>
+                <code className="text-red-400">500</code> for internal
+                processing errors.
+              </li>
+            </ul>
           </div>
         </motion.div>
 

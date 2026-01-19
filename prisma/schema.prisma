@@ -16,20 +16,36 @@ model Admin {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  email         String    @unique
-  createdAt     DateTime  @default(now())
+  id            String                  @id @default(uuid())
+  email         String                  @unique
+  emailVerified DateTime?
+  createdAt     DateTime                @default(now())
   password      String?
-  credits       Int       @default(0)
-  totalCredits  Int       @default(0)
+  credits       Int                     @default(0)
+  totalCredits  Int                     @default(0)
   currentPlanId String?
-  totalRequests Int       @default(0)
+  totalRequests Int                     @default(0)
   image         String?
   provider      String?
-  active        Boolean   @default(true)
+  active        Boolean                 @default(true)
   apiKeys       ApiKey[]
-  currentPlan   Plan?     @relation(fields: [currentPlanId], references: [id])
+  currentPlan   Plan?                   @relation(fields: [currentPlanId], references: [id])
   payments      Payment[]
+  emailToken    EmailVerificationToken?
+}
+
+model EmailVerificationToken {
+  id        String   @id @default(cuid())
+  token     String   
+  userId    String   @unique
+  sentAt  DateTime @default(now()) 
+  expiresAt DateTime
+  attempts  Int      @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([expiresAt])
+  @@index([sentAt])
 }
 
 model Plan {
@@ -68,10 +84,10 @@ model Payment {
   verifiedAt        DateTime?
 
   // Invoice fields
-  invoiceNumber     String?
-  invoicePdfUrl     String?
-  invoicedAt        DateTime?
-  invoiceVisible    Boolean       @default(false)
+  invoiceNumber  String?
+  invoicePdfUrl  String?
+  invoicedAt     DateTime?
+  invoiceVisible Boolean   @default(false)
 
   user   User    @relation(fields: [userId], references: [id])
   plan   Plan    @relation(fields: [planId], references: [id])

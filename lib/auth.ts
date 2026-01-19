@@ -45,6 +45,10 @@ export const authOptions: AuthOptions = {
           throw new Error("Account is blocked");
         }
 
+        if (!user.emailVerified) {
+          throw new Error("Email not verified");
+        }
+
         if (!user.password) {
           throw new Error("Invalid password");
         }
@@ -90,6 +94,7 @@ export const authOptions: AuthOptions = {
               credits: FREE_CREDITS,
               totalRequests: 0,
               provider: "google",
+              emailVerified: new Date(),
               active: true,
             },
           });
@@ -121,7 +126,6 @@ export const authOptions: AuthOptions = {
 
       return token;
     },
-
 
     async session({ session, token }) {
       if (session.user && token.sub) {

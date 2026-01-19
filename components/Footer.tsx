@@ -5,15 +5,12 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <footer className="py-16 border-t-2 border-border text-center sm:text-left mt-4">
-      <div className="container mx-auto px-4 grid gap-8 lg:gap-10 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="container mx-auto px-4 grid gap-8 md:grid-cols-3">
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2 font-bold text-lg justify-center sm:justify-start">
             <Link href="/">CAPTCHA Solver</Link>
           </div>
           <p className="text-sm">© 2025 CAPTCHA Solver. All Rights Reserved.</p>
-
-          {/* Payment methods */}
-          <div className="mt-4 flex gap-3 flex-wrap"></div>
         </div>
 
         {/* Products */}
@@ -79,10 +76,9 @@ export default function Footer() {
         </div>
 
         {/* Contact / Socials */}
-        <div>
+        {/* <div>
           <h4 className="font-semibold mb-4 ">Contact</h4>
           <div className="flex items-center gap-4 justify-center sm:justify-start">
-            {/* Email Icon */}
             <Link
               href="mailto:support@captchasolver.com"
               className="hover:text-primary transition-colors"
@@ -99,7 +95,6 @@ export default function Footer() {
               </svg>
             </Link>
 
-            {/* Telegram Icon */}
             <Link
               href="https://web.telegram.org"
               target="_blank"
@@ -118,7 +113,7 @@ export default function Footer() {
               </svg>
             </Link>
           </div>
-        </div>
+        </div> */}
       </div>
     </footer>
   );
